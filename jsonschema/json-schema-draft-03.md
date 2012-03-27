@@ -1,12 +1,11 @@
-#A JSON Media Type for Describing the Structure and Meaning of JSON Documents#
-
+#用于描述JSON文档结构及含义的JSON媒体类型#
 
 ##概要##
-JSON(Javascript Object Notation) Schema 是对“application/schema+json”的定义，此文档类型是以JSON数据格式为基础。对于已有应用来说，JSON Schema所能做的是对数据形式以及操作方式进行约束，同时也会对校验、文档、链接导航、访问控制尝试定义。
+JSON(Javascript Object Notation) Schema 是对“application/schema+json”的定义，此文档类型以JSON数据格式为基础。从当前应用场景来看，JSON Schema所能做的主要是对数据形式以及操作方式进行约束，同时也包括对校验、文档、链接导航、访问控制的定义。
 
 ##文档状态##
    
-此**互联网草案**以BCP 78与BCP 79规定的形式进行提交。
+此**互联网草案**以符合BCP 78与BCP 79规定的方式进行提交。
 
 所谓**互联网草案**是指**互联网工程工作组**的工作文档，需要注意的是其他工作组也可以将此文档以**互联网草案**的形式发布。可以通过[http://datatracker.ietf.org/drafts/current/](http://datatracker.ietf.org/drafts/current/)查看当前已存在的**互联网草案**。
 
@@ -15,94 +14,67 @@ JSON(Javascript Object Notation) Schema 是对“application/schema+json”的�
 ##版权声明##
 Copyright (c) 2010 版权归互联网工程工作组以及作者所有。
 
-此有效期内，此文档受BCP 78以及互联网工程工作组相关文档条例[http://trustee.ietf.org/license-info](http://trustee.ietf.org/license-info)保护。请仔细阅读以上条例内容中关于权利与约束条件内容。从此文档中提取的任何代码片段需要包含简化BSD许可证中章节4.e中的内容。
+在有效期内，此文档受BCP 78以及互联网工程工作组相关文档条例[http://trustee.ietf.org/license-info](http://trustee.ietf.org/license-info)保护。请仔细阅读以上条例内容中关于权利与约束条件内容。从此文档中提取的任何代码片段需要包含简化BSD许可证中章节4.e中的内容。
 
-##介绍##
-JSON(Javascript Object Notation)Schema是对JSON类型数据结构进行定义。对于已有应用来说，JSON Schema所能做的是对数据形式以及操作方式进行约束，同时也会对校验、文档、链接导航、访问控制尝试定义。
+##一. 介绍##
+JSON(Javascript Object Notation)Schema是对JSON类型数据结构的定义。从当前应用场景来看，JSON Schema所能做的主要是对数据形式以及操作方式进行约束，同时也包括对校验、文档、导航、访问控制的定义。
 
-##约定##
+##二.  约定##
 在此文档中出现的“**必须**”，“**不允许**”，“**必需**”，“**应该**”，“**不应该**”，“**推荐**”，“**可能**”，“**可选**”等与RFC 2119[RFC2119]中的定义相一致。
 
-3.  Overview
+##三. 概括##
 
-   JSON Schema defines the media type "application/schema+json" for
-   describing the structure of other JSON documents.  JSON Schema is
-   JSON-based and includes facilities for describing the structure of
-   JSON documents in terms of allowable values, descriptions, and
-   interpreting relations with other resources.
+ JSON Schema基于JSON，与通常我们所使用的JSON文档相比，它所定义的媒体类型"application/json+schema"通过设定允许值，描述以及表达多资源间的关系等方式来描述JSON文档的结构。
 
-   JSON Schema format is organized into several separate definitions.
-   The first definition is the core schema specification.  This
-   definition is primary concerned with describing a JSON structure and
-   specifying valid elements in the structure.  The second definition is
-   the Hyper Schema specification which is intended define elements in a
-   structure that can be interpreted as hyperlinks.  Hyper Schema builds
-   on JSON Schema to describe the hyperlink structure of other JSON
-   documents and elements of interaction.  This allows user agents to be
-   able to successfully navigate JSON documents based on their schemas.
+JSON Schema由多个独立的规范组成。核心规范主要用于对JSON结构以及结构中元素的有效性进行描述，而衍生（Hyper）规范则主要描述的是结构中某元素可以超链接的方式访问其他资源，终端设备因此可以对超链接所指向的JSON文档进行操纵。
 
-   Cumulatively JSON Schema acts as a meta-document that can be used to
-   define the required type and constraints on property values, as well
-   as define the meaning of the property values for the purpose of
-   describing a resource and determining hyperlinks within the
-   representation.
+其他的JSON Schema则主要用于定义不同数据类型中属性约束值的元文档。这些元文档也做检测属性值中超链接资源之用。
 
+描述产品的JSON Schema例子:
 
+    {
+        "name":"Product",
+        "properties":{
+            "id":{
+                "type":"number",
+                "description":"Product identifier",
+                "required":true
+            },
+            "name":{
+                "description":"Name of the product",
+                "type":"string",
+                "required":true
+            },
+            "price":{
+                "required":true,
+                "type": "number",
+                "minimum":0,
+                "required":true
+            },
+            "tags":{
+                "type":"array",
+                "items":{
+                    "type":"string"
+                }
+            }
+        },
+        "links":[
+            {
+                "rel":"full",
+                "href":"{id}"
+            },
+            {
+                "rel":"comments",
+                "href":"comments/?id={id}"
+            }
+        ]
+    }
 
-   An example JSON Schema that describes products might look like:
-
-   {
-     "name":"Product",
-     "properties":{
-       "id":{
-         "type":"number",
-         "description":"Product identifier",
-         "required":true
-       },
-       "name":{
-         "description":"Name of the product",
-         "type":"string",
-         "required":true
-       },
-       "price":{
-         "required":true,
-         "type": "number",
-         "minimum":0,
-         "required":true
-       },
-       "tags":{
-         "type":"array",
-         "items":{
-           "type":"string"
-         }
-       }
-     },
-     "links":[
-       {
-         "rel":"full",
-         "href":"{id}"
-       },
-       {
-         "rel":"comments",
-         "href":"comments/?id={id}"
-       }
-     ]
-   }
 
    This schema defines the properties of the instance JSON documents,
    the required properties (id, name, and price), as well as an optional
    property (tags).  This also defines the link relations of the
    instance JSON documents.
-
-
-
-
-
-
-
-Zyp & Court               Expires May 26, 2011                  [Page 5]
-
-Internet-Draft           JSON Schema Media Type            November 2010
 
 
 3.1.  Terminology
