@@ -26,11 +26,11 @@ JSON(Javascript Object Notation)Schema是对JSON类型数据结构的定义。�
 
  JSON Schema基于JSON，与通常我们所使用的JSON文档相比，它所定义的媒体类型"application/json+schema"通过设定允许值，描述以及表达多资源间的关系等方式来描述JSON文档的结构。
 
-JSON Schema由多个独立的规范组成。核心规范主要用于对JSON结构以及结构中元素的有效性进行描述，而衍生（Hyper）规范则主要描述的是结构中某元素可以超链接的方式访问其他资源，终端设备因此可以对超链接所指向的JSON文档进行操纵。
+JSON Schema由多个独立的规范组成。核心规范主要用于对JSON结构以及结构中元素的有效性进行描述，而衍生（Hyper）规范则主要描述的是结构中某类可以解析为超链接的元素，以这种方式来表达多资源间的关系。终端设备因此可以对多个JSON文档进行操作。
 
-其他的JSON Schema则主要用于定义不同数据类型中属性约束值的元文档。这些元文档也做检测属性值中超链接资源之用。
+其他JSON Schema则是用于约束某数据类型中属性值的元文档。
 
-描述产品的JSON Schema例子:
+描述产品的JSON Schema例子如下:
 
     {
         "name":"Product",
@@ -70,45 +70,21 @@ JSON Schema由多个独立的规范组成。核心规范主要用于对JSON结�
         ]
     }
 
+上面例子中的schema描述了一个JSON文档实例中哪些属性（id，name，price）是必要的，哪些属性(tags)是可选的。链接则表达的是JSON文档实例之间的关系。
 
-   This schema defines the properties of the instance JSON documents,
-   the required properties (id, name, and price), as well as an optional
-   property (tags).  This also defines the link relations of the
-   instance JSON documents.
+###3.1.  术语###
 
+在本规范中：
+**schema** 指 JSON Schema；
+** 实例 **   指schema所描述或校验的JSON。
 
-3.1.  Terminology
+###3.2.  设计思路###
 
-   For this specification, *schema* will be used to denote a JSON Schema
-   definition, and an *instance* refers to a JSON value that the schema
-   will be describing and validating.
+JSON Schema所做的不止是对JSON包含的数据在结构上进行规范，同时也是一种约定JSON数据如何解析、校验且具有高灵活度的格式。正因为如此，终端设备才能正确理解JSON文档中的结构以及超链接信息。众所周知，JSON文档中包含的数据结构是复杂多变的，也正因为如此，所以我们在设计JSON Schema时突出了它的灵活性。
 
-3.2.  Design Considerations
+本规范与协议无关。与一些底层协议（例如：HTTP）需要充分定义客户端-服务器端接口不同，JSON Schema的主要目标是使用现有的协议和技术描来述纷繁复杂的JSON数据结构。
 
-   The JSON Schema media type does not attempt to dictate the structure
-   of JSON representations that contain data, but rather provides a
-   separate format for flexibly communicating how a JSON representation
-   should be interpreted and validated, such that user agents can
-   properly understand acceptable structures and extrapolate hyperlink
-   information with the JSON document.  It is acknowledged that JSON
-   documents come in a variety of structures, and JSON is unique in that
-   the structure of stored data structures often prescribes a non-
-   ambiguous definite JSON representation.  Attempting to force a
-   specific structure is generally not viable, and therefore JSON Schema
-   allows for a great flexibility in the structure of the JSON data that
-   it describes.
-
-   This specification is protocol agnostic.  The underlying protocol
-   (such as HTTP) should sufficiently define the semantics of the
-   client-server interface, the retrieval of resource representations
-   linked to by JSON representations, and modification of those
-   resources.  The goal of this format is to sufficiently describe JSON
-   structures such that one can utilize existing information available
-   in existing JSON representations from a large variety of services
-   that leverage a representational state transfer architecture using
-   existing protocols.
-
-4.  Schema/Instance Association
+##四. Schema与实例
 
    JSON Schema instances are correlated to their schema by the
    "describedby" relation, where the schema is defined to be the target
@@ -125,12 +101,6 @@ JSON Schema由多个独立的规范组成。核心规范主要用于对JSON结�
    describes the meaning of a JSON instance's (or collection of
    instances) structure.  A MIME type parameter named "profile" or a
    relation of "describedby" (which could be defined by a Link header)
-
-
-
-Zyp & Court               Expires May 26, 2011                  [Page 6]
-
-Internet-Draft           JSON Schema Media Type            November 2010
 
 
    may be used:
