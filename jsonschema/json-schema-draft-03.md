@@ -76,7 +76,7 @@ JSON Schema由多个独立的规范组成。核心规范主要用于对JSON结�
 
 在本规范中：
 **schema** 指 JSON Schema；
-** 实例 **   指schema所描述或校验的JSON。
+**实例**   指schema所描述或校验的JSON。
 
 ###3.2.  设计思路###
 
