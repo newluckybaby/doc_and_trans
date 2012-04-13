@@ -7,7 +7,7 @@ JSON(Javascript Object Notation) Schema 是对“application/schema+json”的�
    
 此**互联网草案**以符合BCP 78与BCP 79规定的方式进行提交。
 
-所谓**互联网草案**是指**互联网工程工作组**的工作文档，需要注意的是其他工作组也可以将此文档以**互联网草案**的形式发布。可以通过[http://datatracker.ietf.org/drafts/current/](http://datatracker.ietf.org/drafts/current/)查看当前已存在的**互联网草案**。
+所谓**互联网草案**是指**互联网工程工作组**的工作文档，需要注意的是其他工作组也可以将此文档以**互联网草案**的形式分发。可以通过[http://datatracker.ietf.org/drafts/current/](http://datatracker.ietf.org/drafts/current/)查看当前已存在的**互联网草案**。
 
 此文档过期时间为二零一一年五月二十六日。
 
@@ -16,21 +16,21 @@ Copyright (c) 2010 版权归互联网工程工作组以及作者所有。
 
 在有效期内，此文档受BCP 78以及互联网工程工作组相关文档条例[http://trustee.ietf.org/license-info](http://trustee.ietf.org/license-info)保护。请仔细阅读以上条例内容中关于权利与约束条件内容。从此文档中提取的任何代码片段需要包含简化BSD许可证中章节4.e中的内容。
 
-##一. 介绍##
+##一、介绍##
 JSON(Javascript Object Notation)Schema是对JSON类型数据结构的定义。从当前应用场景来看，JSON Schema所能做的主要是对数据形式以及操作方式进行约束，同时也包括对校验、文档、导航、访问控制的定义。
 
-##二.  约定##
+##二、 约定##
 在此文档中出现的“**必须**”，“**不允许**”，“**必需**”，“**应该**”，“**不应该**”，“**推荐**”，“**可能**”，“**可选**”等与RFC 2119[RFC2119]中的定义相一致。
 
-##三. 概括##
+##三、概括##
 
  JSON Schema基于JSON，与通常我们所使用的JSON文档相比，它所定义的媒体类型"application/json+schema"通过设定允许值，描述以及表达多资源间的关系等方式来描述JSON文档的结构。
 
-JSON Schema由多个独立的规范组成。核心规范主要用于对JSON结构以及结构中元素的有效性进行描述，而衍生（Hyper）规范则主要描述的是结构中某类可以解析为超链接的元素，以这种方式来表达多资源间的关系。终端设备因此可以对多个JSON文档进行操作。
+JSON Schema由多个独立的规范组成。核心规范部分主要用于对JSON结构以及结构中元素的有效性进行描述，而Hyper规范部分则主要描述的是结构中某类可以解析为超链接的元素，以这种方式来表达多资源间的关系。终端设备因此可以对多个JSON文档进行操作。
 
 其他JSON Schema则是用于约束某数据类型中属性值的元文档。
 
-描述产品的JSON Schema例子如下:
+以描述某产品的JSON Schema为例:
 
     {
         "name":"Product",
@@ -70,78 +70,52 @@ JSON Schema由多个独立的规范组成。核心规范主要用于对JSON结�
         ]
     }
 
-上面例子中的schema描述了一个JSON文档实例中哪些属性（id，name，price）是必要的，哪些属性(tags)是可选的。链接则表达的是JSON文档实例之间的关系。
+上面例子中的schema描述了一个JSON文档实例中哪些属性（id，name，price）是必要的，而哪些属性(tags)是可选的。链接则表达的是JSON文档实例之间的关系。
 
 ###3.1.  术语###
 
-在本规范中：
-**schema** 指 JSON Schema；
-**实例**   指schema所描述或校验的JSON。
+在本规范中，**schema**专指JSON Schema；**实例**专指schema所描述或校验的JSON值。
 
-###3.2.  设计思路###
+###3.2.  考虑因素###
 
-JSON Schema所做的不止是对JSON包含的数据在结构上进行规范，同时也是一种约定JSON数据如何解析、校验且具有高灵活度的格式。正因为如此，终端设备才能正确理解JSON文档中的结构以及超链接信息。众所周知，JSON文档中包含的数据结构是复杂多变的，也正因为如此，所以我们在设计JSON Schema时突出了它的灵活性。
+JSON Schema所做的不止是对JSON对象数据在结构上进行规范约束，同时也对数据如何解析、校验进行定义，在考虑扩展性的前提下，终端设备才有可能在解析JSON文档中的结构以及超链接信息时保持足够的准确度。另外，JSON文档中数据结构复杂多变的特征也要求schema的高的扩展性。
 
-本规范与协议无关。与一些底层协议（例如：HTTP）需要充分定义客户端-服务器端接口不同，JSON Schema的主要目标是使用现有的协议和技术描来述纷繁复杂的JSON数据结构。
+本规范与协议无关。底层协议（例如：HTTP）定义的是客户端与服务器端接口语义，做获取资源文件以及资源变动之用。而JSON Schema的主要目标则不过是描述那些基于底层协议架构之上的服务所生成的复杂JSON数据的结构。
 
-##四. Schema与实例
+##四、关联Schema与实例##
 
-   JSON Schema instances are correlated to their schema by the
-   "describedby" relation, where the schema is defined to be the target
-   of the relation.  Instance representations may be of the
-   "application/json" media type or any other subtype.  Consequently,
-   dictating how an instance representation should specify the relation
-   to the schema is beyond the normative scope of this document (since
-   this document specifically defines the JSON Schema media type, and no
-   other), but it is recommended that instances specify their schema so
-   that user agents can interpret the instance representation and
-   messages may retain the self-descriptive characteristic, avoiding the
-   need for out-of-band information about instance data.  Two approaches
-   are recommended for declaring the relation to the schema that
-   describes the meaning of a JSON instance's (or collection of
-   instances) structure.  A MIME type parameter named "profile" or a
-   relation of "describedby" (which could be defined by a Link header)
+JSON Schema与它相对应的实例是描述与被描述的关系。实例的媒体类型可以为"applcation/json"或者其他子类型。如何指定schmea不在本规范的论述范围。最好为实例文档中指定schema，因为这样终端设备就可以解析JSON实例以及包含的一些自描述信息并过滤到不需要的实例数据。关联实例与schema的方法有二，其一，通过设定profile指定MIME，其二，在链接头中设定describeby指向对应的schema。
+
+例如：
+
+    Content-Type: application/my-media-type+json;
+    			  profile=http://json.com/my-hyper-schema
+
+如果在使用某中协议传输（例如HTTP）中已经指定了头部信息，可以在链接头中指定schema：
+
+    Link: <http://json.com/my-hyper-schema>; rel="describedby"
+
+单个实例**可能**存在多个schema，那么实例数据**应当**通过其对应所有schema的校验。如果JSON文档是多个实例的集合，那么这个集合所包含的实例就**可能**存在多个不同schema，这样就**可能**需要在schema中设置pathStart属性来界别其应用在集合中的哪个实例。总而言之，schema的引用机制因实例文档的类型不同会存在差异。
+
+###4.1.  JSON Schema 的自描述###
+
+JSON Schema可以实现自描述。核心规范和Hyper规范都是自描述的：
+
+>http://json-schema.org/schema
+
+>http://json-schema.org/draft-03/schema
+
+>http://json-schema.org/hyper-schema
+
+>http://json-schema.org/draft-03/hyper-schema.
+   
+   所有使用某一包含媒体类型定义传输协议的schema**应该**包含一个MIME参数并将其值指向自描述型的Hyper Schema或者基于Hyper Schema的扩展型schema：
+    
+    Content-Type: application/json;
+    			  profile=http://json-schema.org/draft-03/hyper-schema
 
 
-   may be used:
-
-   Content-Type: application/my-media-type+json;
-                 profile=http://json.com/my-hyper-schema
-
-   or if the content is being transferred by a protocol (such as HTTP)
-   that provides headers, a Link header can be used:
-
-   Link: <http://json.com/my-hyper-schema>; rel="describedby"
-
-   Instances MAY specify multiple schemas, to indicate all the schemas
-   that are applicable to the data, and the data SHOULD be valid by all
-   the schemas.  The instance data MAY have multiple schemas that it is
-   defined by (the instance data SHOULD be valid for those schemas).  Or
-   if the document is a collection of instances, the collection MAY
-   contain instances from different schemas.  When collections contain
-   heterogeneous instances, the "pathStart" attribute MAY be specified
-   in the schema to disambiguate which schema should be applied for each
-   item in the collection.  However, ultimately, the mechanism for
-   referencing a schema is up to the media type of the instance
-   documents (if they choose to specify that schemas can be referenced).
-
-4.1.  Self-Descriptive Schema
-
-   JSON Schemas can themselves be described using JSON Schemas.  A self-
-   describing JSON Schema for the core JSON Schema can be found at
-   http://json-schema.org/schema for the latest version or
-   http://json-schema.org/draft-03/schema for the draft-03 version.  The
-   hyper schema self-description can be found at
-   http://json-schema.org/hyper-schema or
-   http://json-schema.org/draft-03/hyper-schema.  All schemas used
-   within a protocol with media type definitions SHOULD include a MIME
-   parameter that refers to the self-descriptive hyper schema or another
-   schema that extends this hyper schema:
-
-   Content-Type: application/json;
-                 profile=http://json-schema.org/draft-03/hyper-schema
-
-5.  Core Schema Definition
+##五、核心规范定义##
 
    A JSON Schema is a JSON Object that defines various attributes
    (including usage and valid values) of a JSON value.  JSON Schema has
@@ -149,15 +123,6 @@ JSON Schema所做的不止是对JSON包含的数据在结构上进行规范，�
    structure that allow for nested JSON Schemas.
 
    An example JSON Schema definition could look like:
-
-
-
-
-
-Zyp & Court               Expires May 26, 2011                  [Page 7]
-
-Internet-Draft           JSON Schema Media Type            November 2010
-
 
    {
      "description":"A person",
@@ -207,14 +172,6 @@ Internet-Draft           JSON Schema Media Type            November 2010
 
       If the property is not defined or is not in this list, then any
       type of value is acceptable.  Other type values MAY be used for
-
-
-
-Zyp & Court               Expires May 26, 2011                  [Page 8]
-
-Internet-Draft           JSON Schema Media Type            November 2010
-
-
       custom purposes, but minimal validators of the specification
       implementation can allow any instance value on unknown type
       values.
@@ -260,16 +217,6 @@ Internet-Draft           JSON Schema Media Type            November 2010
    additional properties are allowed beyond the properties defined in
    the schema.  The default value is an empty schema which allows any
    value for additional properties.
-
-
-
-
-
-
-Zyp & Court               Expires May 26, 2011                  [Page 9]
-
-Internet-Draft           JSON Schema Media Type            November 2010
-
 
 5.5.  items
 
@@ -317,16 +264,6 @@ Internet-Draft           JSON Schema Media Type            November 2010
       dependency value.  If the dependency value is an array of strings,
       then the instance object MUST have a property with the same name
       as each string in the dependency value's array.
-
-
-
-
-
-Zyp & Court               Expires May 26, 2011                 [Page 10]
-
-Internet-Draft           JSON Schema Media Type            November 2010
-
-
    Schema Dependency  If the dependency value is a schema, then the
       instance object MUST be valid against the schema.
 
@@ -373,16 +310,6 @@ Internet-Draft           JSON Schema Media Type            November 2010
    and:
 
       are null; or
-
-
-
-
-
-Zyp & Court               Expires May 26, 2011                 [Page 11]
-
-Internet-Draft           JSON Schema Media Type            November 2010
-
-
       are booleans/numbers/strings and have the same value; or
 
       are arrays, contains the same number of items, and each item in
@@ -430,15 +357,6 @@ Internet-Draft           JSON Schema Media Type            November 2010
    This attribute is a string that provides a short description of the
    instance property.
 
-
-
-
-
-Zyp & Court               Expires May 26, 2011                 [Page 12]
-
-Internet-Draft           JSON Schema Media Type            November 2010
-
-
 5.22.  description
 
    This attribute is a string that provides a full description of the of
@@ -484,16 +402,6 @@ Internet-Draft           JSON Schema Media Type            November 2010
    phone  This SHOULD be a phone number (format MAY follow E.123).
 
    uri  This value SHOULD be a URI..
-
-
-
-
-
-
-Zyp & Court               Expires May 26, 2011                 [Page 13]
-
-Internet-Draft           JSON Schema Media Type            November 2010
-
 
    email  This SHOULD be an email address.
 
@@ -543,14 +451,6 @@ Internet-Draft           JSON Schema Media Type            November 2010
      "extends":"person"
    }
 
-
-
-
-Zyp & Court               Expires May 26, 2011                 [Page 14]
-
-Internet-Draft           JSON Schema Media Type            November 2010
-
-
    {
      "description":"Extended schema",
      "properties":{"deprecated":{"type": "boolean"}},
@@ -599,14 +499,6 @@ Internet-Draft           JSON Schema Media Type            November 2010
    The following attributes are specified in addition to those
    attributes that already provided by the core schema with the specific
    purpose of informing user agents of relations between resources based
-
-
-
-Zyp & Court               Expires May 26, 2011                 [Page 15]
-
-Internet-Draft           JSON Schema Media Type            November 2010
-
-
    on JSON data.  Just as with JSON schema attributes, all the
    attributes in hyper schemas are optional.  Therefore, an empty object
    is a valid (non-informative) schema, and essentially describes plain
@@ -655,14 +547,6 @@ Internet-Draft           JSON Schema Media Type            November 2010
 
    Then it would be resolved by replace the value of the "id" property
    value from the instance object.  If the value of the "id" property
-
-
-
-Zyp & Court               Expires May 26, 2011                 [Page 16]
-
-Internet-Draft           JSON Schema Media Type            November 2010
-
-
    was "45", the expanded URI would be:
 
    http://somesite.com/45
@@ -711,14 +595,6 @@ Internet-Draft           JSON Schema Media Type            November 2010
       treated as the root or the body of the representation for the
       purposes of user agent interaction or fragment resolution.  All
       other properties of the instance objects can be regarded as meta-
-
-
-
-Zyp & Court               Expires May 26, 2011                 [Page 17]
-
-Internet-Draft           JSON Schema Media Type            November 2010
-
-
       data descriptions for the data.
 
    The following relations are applicable for schemas (the schema as the
@@ -767,14 +643,6 @@ Internet-Draft           JSON Schema Media Type            November 2010
    ]
 
    This would indicate that for the first item in the collection, its
-
-
-
-Zyp & Court               Expires May 26, 2011                 [Page 18]
-
-Internet-Draft           JSON Schema Media Type            November 2010
-
-
    own (self) URI would resolve to "/Resource/thing" and the first
    item's "up" relation SHOULD be resolved to the resource at
    "/Resource/parent".  The "children" collection would be located at
@@ -822,14 +690,6 @@ Internet-Draft           JSON Schema Media Type            November 2010
       }
     ]
    }
-
-
-
-
-Zyp & Court               Expires May 26, 2011                 [Page 19]
-
-Internet-Draft           JSON Schema Media Type            November 2010
-
 
    This indicates that the client can query the server for instances
    that have a specific name:
@@ -879,14 +739,6 @@ Internet-Draft           JSON Schema Media Type            November 2010
    array the array with the index defined by the next property reference
    token (which MUST be a number).  The target is successively updated
    for each property reference token, until the entire fragment has been
-
-
-
-Zyp & Court               Expires May 26, 2011                 [Page 20]
-
-Internet-Draft           JSON Schema Media Type            November 2010
-
-
    traversed.
 
    Property names SHOULD be URI-encoded.  In particular, any "/" in a
@@ -935,14 +787,6 @@ Internet-Draft           JSON Schema Media Type            November 2010
    changed.  Attempts by a user agent to modify the value of this
    property are expected to be rejected by a server.
 
-
-
-
-Zyp & Court               Expires May 26, 2011                 [Page 21]
-
-Internet-Draft           JSON Schema Media Type            November 2010
-
-
 6.4.  contentEncoding
 
    If the instance property value is a string, this attribute defines
@@ -984,21 +828,6 @@ Internet-Draft           JSON Schema Media Type            November 2010
    URI used to request the resource representation which contains the
    target URI with the "self" link.  For example, if a hyper schema was
    defined:
-
-
-
-
-
-
-
-
-
-
-Zyp & Court               Expires May 26, 2011                 [Page 22]
-
-Internet-Draft           JSON Schema Media Type            November 2010
-
-
    {
      "links":[
            {
@@ -1047,14 +876,6 @@ Content-Type: application/json; profile=/schema-for-this-data
    Optional parameters: pretty
 
    The value of the pretty parameter MAY be true or false to indicate if
-
-
-
-Zyp & Court               Expires May 26, 2011                 [Page 23]
-
-Internet-Draft           JSON Schema Media Type            November 2010
-
-
    additional whitespace has been included to make the JSON
    representation easier to read.
 
