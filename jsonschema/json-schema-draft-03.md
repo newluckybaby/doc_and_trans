@@ -23,8 +23,7 @@ JSON(Javascript Object Notation)Schema是对JSON类型数据结构的定义。�
 在此文档中出现的“**必须**”，“**不允许**”，“**必需**”，“**应该**”，“**不应该**”，“**推荐**”，“**可能**”，“**可选**”等与RFC 2119[RFC2119]中的定义相一致。
 
 ##三、概括##
-
- JSON Schema基于JSON，与通常我们所使用的JSON文档相比，它所定义的媒体类型"application/json+schema"通过设定允许值，描述以及表达多资源间的关系等方式来描述JSON文档的结构。
+JSON Schema基于JSON，与通常我们所使用的JSON文档相比，它所定义的媒体类型"application/json+schema"通过设定允许值，描述以及表达多资源间的关系等方式来描述JSON文档的结构。
 
 JSON Schema由多个独立的规范组成。核心规范部分主要用于对JSON结构以及结构中元素的有效性进行描述，而Hyper规范部分则主要描述的是结构中某类可以解析为超链接的元素，以这种方式来表达多资源间的关系。终端设备因此可以对多个JSON文档进行操作。
 
@@ -72,19 +71,16 @@ JSON Schema由多个独立的规范组成。核心规范部分主要用于对JSO
 
 上面例子中的schema描述了一个JSON文档实例中哪些属性（id，name，price）是必要的，而哪些属性(tags)是可选的。链接则表达的是JSON文档实例之间的关系。
 
-###3.1.  术语###
-
+###3.1  术语###
 在本规范中，**schema**专指JSON Schema；**实例**专指schema所描述或校验的JSON值。
 
-###3.2.  考虑因素###
-
+###3.2  考虑因素###
 JSON Schema所做的不止是对JSON对象数据在结构上进行规范约束，同时也对数据如何解析、校验进行定义，在考虑扩展性的前提下，终端设备才有可能在解析JSON文档中的结构以及超链接信息时保持足够的准确度。另外，JSON文档中数据结构复杂多变的特征也要求schema的高的扩展性。
 
-本规范与协议无关。底层协议（例如：HTTP）定义的是客户端与服务器端接口语义，做获取资源文件以及资源变动之用。而JSON Schema的主要目标则不过是描述那些基于底层协议架构之上的服务所生成的复杂JSON数据的结构。
+本规范与协议无关。底层协议（例如：HTTP）定义的是客户端与服务器端接口语义，做获取资源文件以及资源变动之用。而JSON schema的主要目标则不过是描述那些基于底层协议架构之上的服务所生成的复杂JSON数据的结构。
 
-##四、关联Schema与实例##
-
-JSON Schema与它相对应的实例是描述与被描述的关系。实例的媒体类型可以为"applcation/json"或者其他子类型。如何指定schmea不在本规范的论述范围。最好为实例文档中指定schema，因为这样终端设备就可以解析JSON实例以及包含的一些自描述信息并过滤到不需要的实例数据。关联实例与schema的方法有二，其一，通过设定profile指定MIME，其二，在链接头中设定describeby指向对应的schema。
+##四、Schema与实例##
+JSON Schema与它相对应的实例是描述与被描述的关系。实例的媒体类型可以为"applcation/json"或者其他子类型。如何指定schmea不在本规范的论述范围。最好为实例文档中指定schema，因为这样终端设备就可以解析JSON实例以及包含的一些自描述信息并过滤到不需要的实例数据。关联实例与schema的方法有二，通过设定profile指定MIME，或者在链接头中设定describeby指向对应的schema。
 
 例如：
 
@@ -97,175 +93,104 @@ JSON Schema与它相对应的实例是描述与被描述的关系。实例的媒
 
 单个实例**可能**存在多个schema，那么实例数据**应当**通过其对应所有schema的校验。如果JSON文档是多个实例的集合，那么这个集合所包含的实例就**可能**存在多个不同schema，这样就**可能**需要在schema中设置pathStart属性来界别其应用在集合中的哪个实例。总而言之，schema的引用机制因实例文档的类型不同会存在差异。
 
-###4.1.  JSON Schema 的自描述###
-
+###4.1  JSON Schema 的自描述###
 JSON Schema可以实现自描述。核心规范和Hyper规范都是自描述的：
 
+核心规范最新版：
 >http://json-schema.org/schema
 
+核心规范03版：
 >http://json-schema.org/draft-03/schema
 
+Hyper规范最新版：
 >http://json-schema.org/hyper-schema
 
->http://json-schema.org/draft-03/hyper-schema.
+Hyper规范03版：
+>http://json-schema.org/draft-03/hyper-schema
    
-   所有使用某一包含媒体类型定义传输协议的schema**应该**包含一个MIME参数并将其值指向自描述型的Hyper Schema或者基于Hyper Schema的扩展型schema：
+所有使用某一包含媒体类型定义传输协议的schema**应该**包含一个MIME参数并将其值指向自描述型的Hyper Schema或者基于Hyper Schema的扩展型schema：
     
     Content-Type: application/json;
     			  profile=http://json-schema.org/draft-03/hyper-schema
 
-
 ##五、核心规范定义##
+JSON Schema本质上是定义多个键值对的JSON对象。JSON Schema允许递归，结构中很多元素允许嵌套。
 
-   A JSON Schema is a JSON Object that defines various attributes
-   (including usage and valid values) of a JSON value.  JSON Schema has
-   recursive capabilities; there are a number of elements in the
-   structure that allow for nested JSON Schemas.
+以下面的JSON Schema为例:
 
-   An example JSON Schema definition could look like:
+    {
+        "description": "A person",
+        "type": "object",
+        "properties": {
+            "name": {
+                "type": "string"
+            },
+            "age": {
+                "type": "integer",
+                "maximum": 125
+            }
+        }
+    }
 
-   {
-     "description":"A person",
-     "type":"object",
+JSON Schema 对象可以包含下面描述的属性，我们将其定义为schema属性(所有的属性均为可选)：
 
-     "properties":{
-       "name":{"type":"string"},
-       "age" :{
-           "type":"integer",
-           "maximum":125
-       }
-     }
-   }
+###5.1 type###
+此属性对实例的原始类型或schema进行约束定义(**必须**)，其值可以为下列两种形态中的任意一种：
 
-   A JSON Schema object may have any of the following properties, called
-   schema attributes (all attributes are optional):
+####简单类型####
+表示原始/简单类型的字符串，允许值如下：
 
-5.1.  type
+* string  值**必须**为字符串；
+* number 值**必须**为整型（数字类型的子集）；
+* boolean 值**必须**为布尔值；
+* object 值**必须**为对象；
+* array 值**必须**为数组；
+* null 值**必须**为 null，需要注意的是，只有在使用复合(union)类型（被结合类型包含）时才允许使用；
+* any 值**可能**为包含null类型的任何值；
 
-   This attribute defines what the primitive type or the schema of the
-   instance MUST be in order to validate.  This attribute can take one
-   of two forms:
+如果属性不在列表中或是未定义，则值可以为**any**类型。出于自定义的目的，**可能**会有其他类型值，不过规范只实现了最小校验，因此任何未知类型的值的出现都是合法的。
 
-   Simple Types  A string indicating a primitive or simple type.  The
-      following are acceptable string values:
+####复合类型####  
+包含两个及以上简单类型定义的数组。数组中的每项均**必须**为一个简单类型定义或者schema。如果实例值符合其中任一简单类型定义或者任一schema都会被认为是合法的。
 
-      string  Value MUST be a string.
+如下例，schema中定义的是实例值为string或number型任意一种定义的场景：
 
-      number  Value MUST be a number, floating point numbers are
-         allowed.
+	{"type":["string","number"]}
 
-      integer  Value MUST be an integer, no floating point numbers are
-         allowed.  This is a subset of the number type.
+###5.2 properties###
+	此属性用于约束定义**实例对象**中的值。当实例的**type**为**object**时，实例对象**必须**符合此对象中的属性定义。并且在此对象中，每项定义都**必须**是一个**schema**，且属性的键**必须**与实例对象中定义的属性名称保持一致。实例值**必须**通过此属性定义的校验。在此属性中的每项顺序**可能**与实例属性中的顺序不一致，这就是说此属性与顺序无关。
 
-      boolean  Value MUST be a boolean.
+###5.3  patternProperties###
+此属性同**properties**一样，用于约束定义实例对象的值。所不同是的，对象中的每个属性名称都是一个正则表达式（Perl形式），值则为一个schema。如果和属性名称中的正则表达式匹配到实例对象中的某属性名称。那么实例对象的属性**必须**符合对应正则表达式名称所对应schema。
 
-      object  Value MUST be an object.
+###5.4  additionalProperties###
+此属性为那些在对象类型中未被明确定义的属性提供一个schema。如果设定此属性，其值**必须**为一个schema或者布尔型（boolean）。如果值为false，任何附加属性将不会覆盖schema中的定义。此属性默认值为**空schema**(empty schema)，意味附加属性允许为任何值。
 
-      array  Value MUST be an array.
+###5.5  items###
 
-      null  Value MUST be null.  Note this is mainly for purpose of
-         being able use union types to define nullability.  If this type
-         is not included in a union, null values are not allowed (the
-         primitives listed above do not allow nulls on their own).
+   This attribute defines the allowed items in an instance array, and MUST be a schema or an array of schemas.  The default value is an empty schema which allows any value for items in the instance array.
 
-      any  Value MAY be of any type including null.
+   When this attribute value is a schema and the instance value is an array, then all the items in the array MUST be valid according to the schema.
 
-      If the property is not defined or is not in this list, then any
-      type of value is acceptable.  Other type values MAY be used for
-      custom purposes, but minimal validators of the specification
-      implementation can allow any instance value on unknown type
-      values.
-
-   Union Types  An array of two or more simple type definitions.  Each
-      item in the array MUST be a simple type definition or a schema.
-      The instance value is valid if it is of the same type as one of
-      the simple type definitions, or valid by one of the schemas, in
-      the array.
-
-   For example, a schema that defines if an instance can be a string or
-   a number would be:
-
-   {"type":["string","number"]}
-
-5.2.  properties
-
-   This attribute is an object with property definitions that define the
-   valid values of instance object property values.  When the instance
-   value is an object, the property values of the instance object MUST
-   conform to the property definitions in this object.  In this object,
-   each property definition's value MUST be a schema, and the property's
-   name MUST be the name of the instance property that it defines.  The
-   instance property value MUST be valid according to the schema from
-   the property definition.  Properties are considered unordered, the
-   order of the instance properties MAY be in any order.
-
-5.3.  patternProperties
-
-   This attribute is an object that defines the schema for a set of
-   property names of an object instance.  The name of each property of
-   this attribute's object is a regular expression pattern in the ECMA
-   262/Perl 5 format, while the value is a schema.  If the pattern
-   matches the name of a property on the instance object, the value of
-   the instance's property MUST be valid against the pattern name's
-   schema value.
-
-5.4.  additionalProperties
-
-   This attribute defines a schema for all properties that are not
-   explicitly defined in an object type definition.  If specified, the
-   value MUST be a schema or a boolean.  If false is provided, no
-   additional properties are allowed beyond the properties defined in
-   the schema.  The default value is an empty schema which allows any
-   value for additional properties.
-
-5.5.  items
-
-   This attribute defines the allowed items in an instance array, and
-   MUST be a schema or an array of schemas.  The default value is an
-   empty schema which allows any value for items in the instance array.
-
-   When this attribute value is a schema and the instance value is an
-   array, then all the items in the array MUST be valid according to the
-   schema.
-
-   When this attribute value is an array of schemas and the instance
-   value is an array, each position in the instance array MUST conform
-   to the schema in the corresponding position for this array.  This
-   called tuple typing.  When tuple typing is used, additional items are
-   allowed, disallowed, or constrained by the "additionalItems"
-   (Section 5.6) attribute using the same rules as
-   "additionalProperties" (Section 5.4) for objects.
+   When this attribute value is an array of schemas and the instance value is an array, each position in the instance array MUST conform to the schema in the corresponding position for this array.  This called tuple typing.  When tuple typing is used, additional items are allowed, disallowed, or constrained by the "additionalItems" (Section 5.6) attribute using the same rules as "additionalProperties" (Section 5.4) for objects.
 
 5.6.  additionalItems
 
-   This provides a definition for additional items in an array instance
-   when tuple definitions of the items is provided.  This can be false
-   to indicate additional items in the array are not allowed, or it can
-   be a schema that defines the schema of the additional items.
+   This provides a definition for additional items in an array instance when tuple definitions of the items is provided.  This can be false to indicate additional items in the array are not allowed, or it can be a schema that defines the schema of the additional items.
 
 5.7.  required
 
-   This attribute indicates if the instance must have a value, and not
-   be undefined.  This is false by default, making the instance
-   optional.
+   This attribute indicates if the instance must have a value, and not be undefined.  This is false by default, making the instance optional.
 
 5.8.  dependencies
 
-   This attribute is an object that defines the requirements of a
-   property on an instance object.  If an object instance has a property
-   with the same name as a property in this attribute's object, then the
-   instance must be valid against the attribute's property value
-   (hereafter referred to as the "dependency value").
+   This attribute is an object that defines the requirements of a property on an instance object.  If an object instance has a property with the same name as a property in this attribute's object, then the instance must be valid against the attribute's property value(hereafter referred to as the "dependency value").
 
    The dependency value can take one of two forms:
 
-   Simple Dependency  If the dependency value is a string, then the
-      instance object MUST have a property with the same name as the
-      dependency value.  If the dependency value is an array of strings,
-      then the instance object MUST have a property with the same name
-      as each string in the dependency value's array.
-   Schema Dependency  If the dependency value is a schema, then the
-      instance object MUST be valid against the schema.
+   Simple Dependency  If the dependency value is a string, then the instance object MUST have a property with the same name as the dependency value.  If the dependency value is an array of strings, then the instance object MUST have a property with the same name as each string in the dependency value's array.
+   
+   Schema Dependency  If the dependency value is a schema, then the instance object MUST be valid against the schema.
 
 5.9.  minimum
 
