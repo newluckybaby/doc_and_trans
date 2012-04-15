@@ -255,61 +255,32 @@ JSON Schema 对象可以包含下面描述的属性，我们将其定义为schem
 
 如果存在已创建的自定义格式，那么**可以**将此值设置为URI形式，且此URI指向此格式的schema。
 
-5.24.  divisibleBy
+###5.24.  divisibleBy###
+此属性定义数字实例可以整除的除数。此值**不应该**为0。
 
-   This attribute defines what value the number instance must be
-   divisible by with no remainder (the result of the division must be an
-   integer.)  The value of this attribute SHOULD NOT be 0.
+###5.25 disallow###
+此属性的可取的值与type属性一致，如果实例type值匹配此类型（属性值为字符串）或者匹配类型中的某一种(属性值为包含多个类型的数组)，那么此实例就是非法的。
 
-5.25.  disallow
+###5.26 extends###
+此属性**必须**为当前schema所继承的底层schema，任何符合当前schema的实例也**必须**符合引用的底层schema。属性**可以**是一个数组，在此场景下，实例**必须**符合数组中的每个schema。一个schema可以在另外一个schema的基础上添加附加属性，新增或修改约束条件。
 
-   This attribute takes the same values as the "type" attribute, however
-   if the instance matches the type or if this value is an array and the
-   instance matches any type or schema in the array, then this instance
-   is not valid.
+从概念上讲，这里的扩展可以理解为实例的所有约束来自当前schema与所继承的schema。合并多个schema的行为尽管不是必要的，但确实是一种更优的实现。例如：
 
-5.26.  extends
+    {
+        "description":"An adult",
+        "properties":{"age":{"minimum": 21}},
+        "extends":"person"
+    }
+    {
+        "description":"Extended schema",
+        "properties":{"deprecated":{"type": "boolean"}},
+        "extends":"http://json-schema.org/draft-03/schema"
+    }
 
-   The value of this property MUST be another schema which will provide
-   a base schema which the current schema will inherit from.  The
-   inheritance rules are such that any instance that is valid according
-   to the current schema MUST be valid according to the referenced
-   schema.  This MAY also be an array, in which case, the instance MUST
-   be valid for all the schemas in the array.  A schema that extends
-   another schema MAY define additional attributes, constrain existing
-   attributes, or add other constraints.
+###5.27 id###
+此属性用于定义当前schema的URI，直白讲就是指向"self"的链接。URI可以是相对或绝对路径。当URI为相对路径时，如果其以包含在父级的schema中出现，则其根目录为父级schema的根目录保持一致，反之，则当前schema及其父级schema的URI都将指向当前schema的地址。在id属性没有设置的情况下，当前schema的URI将会被父级schema的URI替代。当前schema的URI通常是$ref中构造的相对路径。
 
-   Conceptually, the behavior of extends can be seen as validating an
-   instance against all constraints in the extending schema as well as
-   the extended schema(s).  More optimized implementations that merge
-   schemas are possible, but are not required.  An example of using
-   "extends":
-
-   {
-     "description":"An adult",
-     "properties":{"age":{"minimum": 21}},
-     "extends":"person"
-   }
-
-   {
-     "description":"Extended schema",
-     "properties":{"deprecated":{"type": "boolean"}},
-     "extends":"http://json-schema.org/draft-03/schema"
-   }
-
-5.27.  id
-
-   This attribute defines the current URI of this schema (this attribute
-   is effectively a "self" link).  This URI MAY be relative or absolute.
-   If the URI is relative it is resolved against the current URI of the
-   parent schema it is contained in.  If this schema is not contained in
-   any parent schema, the current URI of the parent schema is held to be
-   the URI under which this schema was addressed.  If id is missing, the
-   current URI of a schema is defined to be that of the parent schema.
-   The current URI of the schema is also used to construct relative
-   references such as for $ref.
-
-5.28.  $ref
+###5.28 $ref###
 
    This attribute defines a URI of a schema that contains the full
    representation of this schema.  When a validator encounters this
