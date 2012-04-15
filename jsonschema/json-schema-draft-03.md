@@ -25,7 +25,7 @@ JSON(Javascript Object Notation)Schema是对JSON类型数据结构的定义。�
 ##三、概括##
 JSON Schema基于JSON，与通常我们所使用的JSON文档相比，它所定义的媒体类型"application/json+schema"通过设定允许值，描述以及表达多资源间的关系等方式来描述JSON文档的结构。
 
-JSON Schema由多个独立的规范组成。核心规范部分主要用于对JSON结构以及结构中元素的有效性进行描述，而Hyper规范部分则主要描述的是结构中某类可以解析为超链接的元素，以这种方式来表达多资源间的关系。终端设备因此可以对多个JSON文档进行操作。
+JSON Schema由多个独立的规范组成。核心规范部分主要用于对JSON结构以及结构中元素的有效性进行描述，而Hyper规范部分则主要描述的是结构中某类可以解析为超链接的元素，以这种方式来表达多资源间的关系。终端设备因此操控对多个JSON文档。
 
 其他JSON Schema则是用于约束某数据类型中属性值的元文档。
 
@@ -160,185 +160,100 @@ JSON Schema 对象可以包含下面描述的属性，我们将其定义为schem
 ###5.2 properties###
 此属性用于约束定义**实例对象**中的值。当实例的**type**为**object**时，实例对象**必须**符合此对象中的属性定义。并且在此对象中，每项定义都**必须**是一个**schema**，且属性的键**必须**与实例对象中定义的属性名称保持一致。实例值**必须**通过此属性定义的校验。在此属性中的每项顺序**可能**与实例属性中的顺序不一致，这就是说此属性与顺序无关。
 
-###5.3  patternProperties###
+###5.3 patternProperties###
 此属性同**properties**一样，用于约束定义实例对象的值。所不同是的，对象中的每个属性名称都是一个正则表达式（Perl形式），值则为一个schema。如果和属性名称中的正则表达式匹配到实例对象中的某属性名称。那么实例对象的属性**必须**符合对应正则表达式名称所对应schema。
 
-###5.4  additionalProperties###
-此属性为那些在对象类型中未被明确定义的属性提供一个schema。如果设定此属性，其值**必须**为一个schema或者布尔型（boolean）。如果值为false，任何附加属性将不会覆盖schema中的定义。此属性默认值为**空schema**(empty schema)，意味附加属性允许为任何值。
+###5.4 additionalProperties###
+此属性为那些在对象类型中未被明确定义的属性提供一个schema。如果设定此属性，其值**必须**为一个schema或者布尔型（boolean）。如果值为false，任何附加属性将不会覆盖schema中的定义。此属性默认值为**空schema**(empty schema)，即附加属性允许为任何值。
 
-###5.5  items###
+###5.5 items###
+此属性主要用于约束实例数组项的值。默认值为空**schema**，即实例数组项可以为任何值。
 
-   This attribute defines the allowed items in an instance array, and MUST be a schema or an array of schemas.  The default value is an empty schema which allows any value for items in the instance array.
+当此属性值为单个schema且实例值为数组时，则数组中的每项都**必须**此schema的校验。
 
-   When this attribute value is a schema and the instance value is an array, then all the items in the array MUST be valid according to the schema.
+当此属性值为一包含多个schema的数组且实例值为数组时，实例数组中每项都**必须**符合在此属性中相同下标值对应的schema。我们称之为元组(tuple)类型。在使用元组类型时，附加项是否允许出现以及addtionalItems(章节5.6)的约束关系与addtionalProperties（章节5.4）规则保持一致。
 
-   When this attribute value is an array of schemas and the instance value is an array, each position in the instance array MUST conform to the schema in the corresponding position for this array.  This called tuple typing.  When tuple typing is used, additional items are allowed, disallowed, or constrained by the "additionalItems" (Section 5.6) attribute using the same rules as "additionalProperties" (Section 5.4) for objects.
+###5.6 additionalItems###
+如果**items**中出现元组类型时，此属性用于定义数组实例附加项。如果值为false，则表示数组中出现的附加项是非法的。如果值为schema，则表示的是附加项所对应的schema。
 
-5.6.  additionalItems
+###5.7 required###
+此属性表示是否需要设定实例值且实例不能为undefined。默认值为false，表示此实例可选。
 
-   This provides a definition for additional items in an array instance when tuple definitions of the items is provided.  This can be false to indicate additional items in the array are not allowed, or it can be a schema that defines the schema of the additional items.
+###5.8  dependencies###
 
-5.7.  required
+此属性类型为object，用于表示实例对象中的属性依赖。如果在对象实例中包含此属性对象中某属性同名的情况，那么此实例就必须符合相对应属性的值（**依赖值**）。
 
-   This attribute indicates if the instance must have a value, and not be undefined.  This is false by default, making the instance optional.
+依赖值可以是以下两种形态中任意一种：
 
-5.8.  dependencies
+**简单依赖** 如果依赖值为字符串，则实例对象就**必须**包含与此依赖值同名的属性。如果依赖值为一字符串数组，则实例对象就**必须**包含与依赖值数组中每一个同名的属性。
 
-   This attribute is an object that defines the requirements of a property on an instance object.  If an object instance has a property with the same name as a property in this attribute's object, then the instance must be valid against the attribute's property value(hereafter referred to as the "dependency value").
+**Schema 依赖** 如果依赖值为schema，则实例对象**必须**符合此schema。
 
-   The dependency value can take one of two forms:
+###5.9 minimum###
+此属性用于定义当实例为数字类型时的实例的最小值。
 
-   Simple Dependency  If the dependency value is a string, then the instance object MUST have a property with the same name as the dependency value.  If the dependency value is an array of strings, then the instance object MUST have a property with the same name as each string in the dependency value's array.
-   
-   Schema Dependency  If the dependency value is a schema, then the instance object MUST be valid against the schema.
+###5.10 maximum###
+此属性用于定义当实例为数字类型时实例的最大值。
 
-5.9.  minimum
+###5.11 exclusiveMinimum###
+此属性用于标示当实例为数字类型时实例值是否可以为minium中设定的最小值。默认值为false，即实例值可以大于等于最小值。
 
-   This attribute defines the minimum value of the instance property
-   when the type of the instance value is a number.
+###5.12 exclusiveMaximum###
+此属性用于标示当实例为数字类型时实例值是否可以为maxinum中设定的最大值。默认值为false，即实例值可以小于等于最大值。
 
-5.10.  maximum
+###5.13 minItems###
+此属性用于定义当实例为数组类型时所包含的最少项。
+  
+###5.14 maxItems###
+此属性用于定义当实例为数组类型是所包含的最多项。
 
-   This attribute defines the maximum value of the instance property
-   when the type of the instance value is a number.
+###5.15 uniqueItems###
+此属性用于标示当实例为数组类型时数组的每项是否**必须**是唯一的。如果两个实例出现下列情况中的任意一种即被认为是相等的：
 
-5.11.  exclusiveMinimum
+* 值都为null；
+* 类型为布尔、数字或者字符串，值相等；
+* 类型为数组，数组长度相等且差集为空；
+* 类型为对象，含有相同个数的同名键值对；
 
-   This attribute indicates if the value of the instance (if the
-   instance is a number) can not equal the number defined by the
-   "minimum" attribute.  This is false by default, meaning the instance
-   value can be greater then or equal to the minimum value.
+###5.16 pattern###
+此属性为一正则表达式，当实例为字符串类型时，字符串实例必须匹配此属性提供的正则表达式。此处的正则表达式**应该**符合正则表达式规范（Perl形式）。
 
-5.12.  exclusiveMaximum
+###5.17 minLength###
+此属性定义当实例为字符串类型时字符串的最小长度。
 
-   This attribute indicates if the value of the instance (if the
-   instance is a number) can not equal the number defined by the
-   "maximum" attribute.  This is false by default, meaning the instance
-   value can be less then or equal to the maximum value.
+###5.18 maxLength###
+此属性定义当实例值为字符串类型时字符串的最大长度。
 
-5.13.  minItems
+###5.19 enum###
+此属性**必须**为数组类型，用于枚举实例属性的可能值。定义此属性后，实例值必须是此数组属性中的任意一符合schema的值。枚举值与uniqueItems中定义的规则（章节5.15）保持一致。
 
-   This attribute defines the minimum number of values in an array when
-   the array is the instance value.
+###5.20 default###
+此属性定义当实例为undefined时的默认值。
 
-5.14.  maxItems
+###5.21 title###
+此属性为字符串类型，用于简短描述实例属性。
 
-   This attribute defines the maximum number of values in an array when
-   the array is the instance value.
+###5.22 description###
+此属性为字符串类型，用于完整描述实例属性。
 
-5.15.  uniqueItems
+###5.23 format###
+此属性用于定义实例属性值可能会出现数据类型，内容类型以及微格式。此属性**可能**是下面列表中的某一种，如果是，那么这些格式自身就附带了语义。这些格式应用场景**应当**只限于当值为原始类型（字符串，整型，数字，布尔）时。校验器**可以**(非必要)根据格式校验实例值。预设值如下：
+ 
+* date-time 此值表示实例值**应该**符合形如YYYY-MM-DDThh:mm:ssZ的ISO 8601的UTC时间表示格式，推荐使用此格式表示日期和时间戳；
+* date 此值表示实例值**应该**符合形如YYYY-MM-DD的格式。在只需要表示日期的情况下，可选择此值，其他情况则推荐使用date-time；
+* time 此值表示实例值**应该**符合形如hh:mm:ss的格式。在只需要表示时间的情况下，可选择此值，其他情况则推荐使用date-time；
+* utc-millisec 此值较为特殊，表示实例值**应该**为距UTC时间1970年1月1日0点0分的类型为整型或浮点型的毫秒值；
+* regex 此值实例值应该为正则表达式（Perl形式）；
+* color 此值表示实例值**应该**符合CSS 2.1[W3C.CR-CSS21-20070719]的色彩表现方式；
+* style 此值表示实例值**应该**符合CSS 2.1[W3C.CR-CSS21-20070719]的样式规则（例如："color: red; background-color:#FFF"）；
+* phone 此值表示实例值**应该**为电话号码；
+* uri 此值表示实例值**应该**为URI；
+* email 此值表示实例值**应该**为邮件地址；
+* ip-address 此值表示实例值**应该**为ipv4地址；
+* ipv6 此值表示实例值**应该**为ipv6地址；
+* host-name 此值表示实例值**应该**为主机名称;
 
-   This attribute indicates that all items in an array instance MUST be
-   unique (contains no two identical values).
-
-   Two instance are consider equal if they are both of the same type
-   and:
-
-      are null; or
-      are booleans/numbers/strings and have the same value; or
-
-      are arrays, contains the same number of items, and each item in
-      the array is equal to the corresponding item in the other array;
-      or
-
-      are objects, contains the same property names, and each property
-      in the object is equal to the corresponding property in the other
-      object.
-
-5.16.  pattern
-
-   When the instance value is a string, this provides a regular
-   expression that a string instance MUST match in order to be valid.
-   Regular expressions SHOULD follow the regular expression
-   specification from ECMA 262/Perl 5
-
-5.17.  minLength
-
-   When the instance value is a string, this defines the minimum length
-   of the string.
-
-5.18.  maxLength
-
-   When the instance value is a string, this defines the maximum length
-   of the string.
-
-5.19.  enum
-
-   This provides an enumeration of all possible values that are valid
-   for the instance property.  This MUST be an array, and each item in
-   the array represents a possible value for the instance value.  If
-   this attribute is defined, the instance value MUST be one of the
-   values in the array in order for the schema to be valid.  Comparison
-   of enum values uses the same algorithm as defined in "uniqueItems"
-   (Section 5.15).
-
-5.20.  default
-
-   This attribute defines the default value of the instance when the
-   instance is undefined.
-
-5.21.  title
-
-   This attribute is a string that provides a short description of the
-   instance property.
-
-5.22.  description
-
-   This attribute is a string that provides a full description of the of
-   purpose the instance property.
-
-5.23.  format
-
-   This property defines the type of data, content type, or microformat
-   to be expected in the instance property values.  A format attribute
-   MAY be one of the values listed below, and if so, SHOULD adhere to
-   the semantics describing for the format.  A format SHOULD only be
-   used to give meaning to primitive types (string, integer, number, or
-   boolean).  Validators MAY (but are not required to) validate that the
-   instance values conform to a format.  The following formats are
-   predefined:
-
-   date-time  This SHOULD be a date in ISO 8601 format of YYYY-MM-
-      DDThh:mm:ssZ in UTC time.  This is the recommended form of date/
-      timestamp.
-
-   date  This SHOULD be a date in the format of YYYY-MM-DD.  It is
-      recommended that you use the "date-time" format instead of "date"
-      unless you need to transfer only the date part.
-
-   time  This SHOULD be a time in the format of hh:mm:ss.  It is
-      recommended that you use the "date-time" format instead of "time"
-      unless you need to transfer only the time part.
-
-   utc-millisec  This SHOULD be the difference, measured in
-      milliseconds, between the specified time and midnight, 00:00 of
-      January 1, 1970 UTC.  The value SHOULD be a number (integer or
-      float).
-
-   regex  A regular expression, following the regular expression
-      specification from ECMA 262/Perl 5.
-
-   color  This is a CSS color (like "#FF0000" or "red"), based on CSS
-      2.1 [W3C.CR-CSS21-20070719].
-
-   style  This is a CSS style definition (like "color: red; background-
-      color:#FFF"), based on CSS 2.1 [W3C.CR-CSS21-20070719].
-
-   phone  This SHOULD be a phone number (format MAY follow E.123).
-
-   uri  This value SHOULD be a URI..
-
-   email  This SHOULD be an email address.
-
-   ip-address  This SHOULD be an ip version 4 address.
-
-   ipv6  This SHOULD be an ip version 6 address.
-
-   host-name  This SHOULD be a host-name.
-
-   Additional custom formats MAY be created.  These custom formats MAY
-   be expressed as an URI, and this URI MAY reference a schema of that
-   format.
+如果存在已创建的自定义格式，那么**可以**将此值设置为URI形式，且此URI指向此格式的schema。
 
 5.24.  divisibleBy
 
