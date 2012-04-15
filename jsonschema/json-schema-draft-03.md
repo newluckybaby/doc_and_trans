@@ -114,7 +114,7 @@ Hyper规范03版：
     			  profile=http://json-schema.org/draft-03/hyper-schema
 
 ##五、核心规范定义##
-JSON Schema本质上是定义多个键值对的JSON对象。JSON Schema允许递归，结构中很多元素允许嵌套。
+JSON Schema本质上是定义多个键值对的JSON对象。JSON Schema允许递归，其结构中允许出现嵌套。
 
 以下面的JSON Schema为例:
 
@@ -278,34 +278,17 @@ JSON Schema 对象可以包含下面描述的属性，我们将其定义为schem
     }
 
 ###5.27 id###
-此属性用于定义当前schema的URI，直白讲就是指向"self"的链接。URI可以是相对或绝对路径。当URI为相对路径时，如果其以包含在父级的schema中出现，则其根目录为父级schema的根目录保持一致，反之，则当前schema及其父级schema的URI都将指向当前schema的地址。在id属性没有设置的情况下，当前schema的URI将会被父级schema的URI替代。当前schema的URI通常是$ref中构造的相对路径。
+此属性用于定义当前schema的URI，直白讲就是指向"self"的链接。URI**可以**是相对或绝对路径。当URI为相对路径时，如果其以包含在父级的schema中出现，则其根目录为父级schema的根目录保持一致，反之，则当前schema及其父级schema的URI都将指向当前schema的地址。在id属性没有设置的情况下，当前schema的URI将会被父级schema的URI替代。当前schema的URI通常是$ref中构造的相对路径。
 
 ###5.28 $ref###
+此属性用于定义为**索引全部schema**的schema的URI。当校验器处理此属性时，当会将当前的schema替换为此属性的值后再对实例进行校验。此URI**可以**是相对或绝对路径。相对路径的根目录与当前schema所在目录一致。
 
-   This attribute defines a URI of a schema that contains the full
-   representation of this schema.  When a validator encounters this
-   attribute, it SHOULD replace the current schema with the schema
-   referenced by the value's URI (if known and available) and re-
-   validate the instance.  This URI MAY be relative or absolute, and
-   relative URIs SHOULD be resolved against the URI of the current
-   schema.
+###5.29 $schema###
+此属性用于定义当前schema的JSON Schema。此属性被设定时，校验器**应当**使用此属性值所设定的URI指向的schema去解析Hyper Schema中的链接（章节6.1）。
 
-5.29.  $schema
+校验器**可以**通过此属性的值来确定当前schema所使用JSON Schema的版本，从而提供正确的校验行为特征。因此，**推荐**所有的schema作者在其编写的schema中设定此属性以避免因JSON Schema规范版本差异出现的问题。
 
-   This attribute defines a URI of a JSON Schema that is the schema of
-   the current schema.  When this attribute is defined, a validator
-   SHOULD use the schema referenced by the value's URI (if known and
-   available) when resolving Hyper Schema (Section 6) links
-   (Section 6.1).
-
-   A validator MAY use this attribute's value to determine which version
-   of JSON Schema the current schema is written in, and provide the
-   appropriate validation features and behavior.  Therefore, it is
-   RECOMMENDED that all schema authors include this attribute in their
-   schemas to prevent conflicts with future JSON Schema specification
-   changes.
-
-6.  Hyper Schema
+##六、 Hyper Schema##
 
    The following attributes are specified in addition to those
    attributes that already provided by the core schema with the specific
