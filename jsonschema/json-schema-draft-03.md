@@ -278,229 +278,126 @@ JSON Schema 对象可以包含下面描述的属性，我们将其定义为schem
     }
 
 ###5.27 id###
-此属性用于定义当前schema的URI，直白讲就是指向"self"的链接。URI**可以**是相对或绝对路径。当URI为相对路径时，如果其以包含在父级的schema中出现，则其根目录为父级schema的根目录保持一致，反之，则当前schema及其父级schema的URI都将指向当前schema的地址。在id属性没有设置的情况下，当前schema的URI将会被父级schema的URI替代。当前schema的URI通常是$ref中构造的相对路径。
+此属性用于定义当前schema的URI，直白讲就是指向"self"的链接。URI**可以**是相对或绝对路径。当URI为相对路径时，如果其以包含在父级的schema中出现，则其根目录为父级schema的根目录保持一致，反之，则当前schema及其父级schema的URI都将指向当前schema的地址。在id属性没有设置的情况下，当前schema的URI将会被父级schema的URI替代。当前schema的URI通常用于构造其他引用的相对路径（例如$ref）。
 
 ###5.28 $ref###
-此属性用于定义为**索引全部schema**的schema的URI。当校验器处理此属性时，当会将当前的schema替换为此属性的值后再对实例进行校验。此URI**可以**是相对或绝对路径。相对路径的根目录与当前schema所在目录一致。
+此属性值为指向当前schema所对应的完整表现的URI。当校验器处理此属性时，当会将当前的schema替换为此属性的值后再对实例进行校验。此URI**可以**是相对或绝对路径。相对路径情景下URI的根目录与当前schema所在目录相同。
 
 ###5.29 $schema###
-此属性用于定义当前schema的JSON Schema。此属性被设定时，校验器**应当**使用此属性值所设定的URI指向的schema去解析Hyper Schema中的链接（章节6.1）。
+此属性用于表示当前schema的标准schema。此属性被设定时，校验器**应当**使用此属性值设定的URI所指向的schema去解析Hyper Schema中的links属性（章节6.1）。
 
-校验器**可以**通过此属性的值来确定当前schema所使用JSON Schema的版本，从而提供正确的校验行为特征。因此，**推荐**所有的schema作者在其编写的schema中设定此属性以避免因JSON Schema规范版本差异出现的问题。
+校验器**可以**通过此属性的值来确定当前schema所使用的标准schema的版本，从而提供正确的校验行为和特征。因此，**推荐**所有的schema作者在其编写的schema中设定此属性以避免因标准schema版本差异引发的问题。
 
 ##六、 Hyper Schema##
+本章所涉及的属性是对核心规范中已出现属性的补充，主要为终端设备提供JSON数据资源之间的关系。同核心规范中的属性一样，Hyper Schema中提到的所有属性都是可选的。因此空对象也被认为是合法的schema，因为从本质上讲它就是无任何约束关系的JSON文本。
 
-   The following attributes are specified in addition to those
-   attributes that already provided by the core schema with the specific
-   purpose of informing user agents of relations between resources based
-   on JSON data.  Just as with JSON schema attributes, all the
-   attributes in hyper schemas are optional.  Therefore, an empty object
-   is a valid (non-informative) schema, and essentially describes plain
-   JSON (no constraints on the structures).  Addition of attributes
-   provides additive information for user agents.
+###6.1 links###
+此属性值**必须**为一数组，且数组中的每项都是用于描述实例之间链接关系的链接对象。
 
-6.1.  links
+####6.1.1 链接描述对象####
+链接描述对象常用做描述链接关系，在schema的上下文环境中，则用作定义同schema下多个实例间的链接关系，并且实例值还可以将其参数化。通常，链接描述可以为自身(非schema文档)，也可以是标准的描述schema或者是为此数据结构声明的schema。
 
-   The value of the links property MUST be an array, where each item in
-   the array is a link description object which describes the link
-   relations of the instances.
+标准的描述schema链接地址如下：
 
-6.1.1.  Link Description Object
+* [http://json-schema.org/links](http://json-schema.org/links)(最新版本)  
+* [http://json-schema.org/draft-03/links](http://json-schema.org/draft-03/links) (03版本).
 
-   A link description object is used to describe link relations.  In the
-   context of a schema, it defines the link relations of the instances
-   of the schema, and can be parameterized by the instance values.  The
-   link description format can be used on its own in regular (non-schema
-   documents), and use of this format can be declared by referencing the
-   normative link description schema as the the schema for the data
-   structure that uses the links.  The URI of the normative link
-   description schema is: http://json-schema.org/links (latest version)
-   or http://json-schema.org/draft-03/links (draft-03 version).
+#####6.1.1.1 href#####
+此属性值为指向相关资源的目标URI。实例属性值**应该**为形如[RFC3986](http://tools.ietf.org/html/rfc3986)中定义的URL-Reference格式。当links出现在schema中时，若href值为相对链接，那么其根目录**应该**与实例对象而不是当前schema所在的目录相同。另外，当links出现在在schema中且在URI模板中出现的参数在实例对象中有对应键值或者其他诸如用户输入等数据源的情况下，URI**应该**会被实例对象中的属性值参数化。参数化的过程就是在URI中"{}"所包含的字符串被对应实例属性值替换输出完整URI的过程。
 
-6.1.1.1.  href
+例如，某href值的定义：
 
-   The value of the "href" link description property indicates the
-   target URI of the related resource.  The value of the instance
-   property SHOULD be resolved as a URI-Reference per RFC 3986 [RFC3986]
-   and MAY be a relative URI.  The base URI to be used for relative
-   resolution SHOULD be the URI used to retrieve the instance object
-   (not the schema) when used within a schema.  Also, when links are
-   used within a schema, the URI SHOULD be parametrized by the property
-   values of the instance object, if property values exist for the
-   corresponding variables in the template (otherwise they MAY be
-   provided from alternate sources, like user input).
+	http://somesite.com/{id}
 
-   Instance property values SHOULD be substituted into the URIs where
-   matching braces ('{', '}') are found surrounding zero or more
-   characters, creating an expanded URI.  Instance property value
-   substitutions are resolved by using the text between the braces to
-   denote the property name from the instance to get the value to
-   substitute.  For example, if an href value is defined:
+其中的{id}将会被替换为实例对象中属性id的值。假如实例id属性值为字符串45，那么扩展后完整的URI就是：
+	
+	http://somesite.com/45 
 
-   http://somesite.com/{id}
+如果大括号中包含字符串@，那么就是当前整个实例而不是单个属性替换掉大括号中的字符串。通常只有在实例为原始类型（字符串，布尔，数字）时才会有这样的场景。
 
-   Then it would be resolved by replace the value of the "id" property
-   value from the instance object.  If the value of the "id" property
-   was "45", the expanded URI would be:
+#####6.1.1.2 rel#####
+此属性值用于标示实例与目标之间的关系名称。与目标的关系需要明确表达的不止是父包含子、子继承父的关系，实例对象与schema，sub-schema之间的关系也**应该**解释清楚。如果一个JSON类型的资源以链接的形式包含一个类型为对象的属性，那么子对象就和此资源建立了关系。另外资源与描述资源的schema之间的关系也**必须**明确标示。
 
-   http://somesite.com/45
+关系定义**应该**与媒体类型**无**依赖关系。尽管鼓励用户利用已有被广泛接受的关系定义，包括已存在的关系注册[RFC4287](http://tools.ietf.org/html/rfc4287)。不过我们已经定义了清晰的处于JSON Hyper Schema上下文的关系定义：
 
-   If matching braces are found with the string "@" (no quotes) between
-   the braces, then the actual instance value SHOULD be used to replace
-   the braces, rather than a property value.  This should only be used
-   in situations where the instance is a scalar (string, boolean, or
-   number), and not for objects or arrays.
+* self 当links属性在实例对象中，则表示实例对象被指定URI所表示的目的资源识别为自身的完整表现；
+* full 表示链接指向的目标资源是实例对象的完整表现，但包含当前links属性的对象则不一定是完整的；
+* describedby 表示目标链接是当前实例对象所对应的schema，主要用于表现schema的继承，多态，中间件等JSON数据结构；
+* root 表示目标链接为了方便终端进行交互、拆分管理被看做根或者表现主体，实例对象中的其他属性则是用于描述数据的源数据。
+      
+下面的关系定义主要用于表示schema之间的关系:
 
-6.1.1.2.  rel
+* instances 表示目标资源是schema的实例集合；
+* create 表示目标**应该**是用于创建基于此schema的实例的一个使用非安全方式提交的链接(例如POST)；
 
-   The value of the "rel" property indicates the name of the relation to
-   the target resource.  The relation to the target SHOULD be
-   interpreted as specifically from the instance object that the schema
-   (or sub-schema) applies to, not just the top level resource that
-   contains the object within its hierarchy.  If a resource JSON
-   representation contains a sub object with a property interpreted as a
-   link, that sub-object holds the relation with the target.  A relation
-   to target from the top level resource MUST be indicated with the
-   schema describing the top level JSON representation.
+例如某schema定义如下:
 
-   Relationship definitions SHOULD NOT be media type dependent, and
-   users are encouraged to utilize existing accepted relation
-   definitions, including those in existing relation registries (see RFC
-   4287 [RFC4287]).  However, we define these relations here for clarity
-   of normative interpretation within the context of JSON hyper schema
-   defined relations:
+    {
+        "links": [{
+            "rel": "self",
+            "href": "{id}"
+        },
+        {
+            "rel": "up",
+            "href": "{upId}"
+        },
+        {
+            "rel": "children",
+            "href": "?upId={id}"
+        }]
+    }
 
-   self  If the relation value is "self", when this property is
-      encountered in the instance object, the object represents a
-      resource and the instance object is treated as a full
-      representation of the target resource identified by the specified
-      URI.
 
-   full  This indicates that the target of the link is the full
-      representation for the instance object.  The object that contains
-      this link possibly may not be the full representation.
+已取得实例资源集合的JSON表现：
 
-   describedby  This indicates the target of the link is the schema for
-      the instance object.  This MAY be used to specifically denote the
-      schemas of objects within a JSON object hierarchy, facilitating
-      polymorphic type data structures.
+	GET /Resource/
 
-   root  This relation indicates that the target of the link SHOULD be
-      treated as the root or the body of the representation for the
-      purposes of user agent interaction or fragment resolution.  All
-      other properties of the instance objects can be regarded as meta-
-      data descriptions for the data.
+    [{
+        "id": "thing",
+        "upId": "parent"
+    },
+    {
+        "id": "thing2",
+        "upId": "parent"
+    }]
 
-   The following relations are applicable for schemas (the schema as the
-   "from" resource in the relation):
+以集合中的第一项为例，self指向的URI为"/Resource/thing"，up指向的URI为"/Resource/parent"，而children指向的URI为"/Resource/?upId=thing"。
+  
+#####6.1.1.3 targetSchema#####
+此属性值为用户定义当前JSON数据结构的schema链接。
 
-   instances  This indicates the target resource that represents
-      collection of instances of a schema.
+#####6.1.1.4 提交链接属性 #####
+下面提到的属性同样应用与链接定义对象，不过其主要目的是为了模拟一个类似HTML表单便于向服务器端提供一些额外的数据，而这些数据通常是有用户提供的。
 
-   create  This indicates a target to use for creating new instances of
-      a schema.  This link definition SHOULD be a submission link with a
-      non-safe method (like POST).
+######6.1.1.4.1 method######
+此属性用于定义访问目标资源的method，在HTTP环境中，其值可以为GET或者POST，类似PUT、DELETE的带有明显语义的HTTP方法不需要在这里定义。默认值为GET。
 
-   For example, if a schema is defined:
+######6.1.1.4.2 enctype######
+若设置此属性，则表示服务端在查询提交实例集合时所支持的查询媒体类型格式。此类查询会将此属性值以后缀的形式附加在目标URI后去查询服务端返回的基于属性约束的集合或者提交数据到目标资源。
 
-   {
-     "links": [
-       {
-         "rel": "self"
-         "href": "{id}"
-       },
-       {
-         "rel": "up"
-         "href": "{upId}"
-       },
-       {
-         "rel": "children"
-         "href": "?upId={id}"
-       }
-     ]
-   }
+以下面的schema为例：
+    {
+        "links": [{
+            "enctype": "application/x-www-form-urlencoded",
+            "method": "GET",
+            "href": "/Product/",
+            "properties": {
+                "name": {
+                    "description": "name of the product"
+                }
+            }
+        }]
+    }
+    
+客户端将会去服务端查询特定name的实例：
+	
+	/Product/?name=Slinky
 
-   And if a collection of instance resource's JSON representation was
-   retrieved:
+如果enctype与method都没有指定的话，只会根据href中指定的URI向服务端发送请求。当method值为POST时，默认媒体类型为"application/json"。
 
-   GET /Resource/
-
-   [
-     {
-       "id": "thing",
-       "upId": "parent"
-     },
-     {
-       "id": "thing2",
-       "upId": "parent"
-     }
-   ]
-
-   This would indicate that for the first item in the collection, its
-   own (self) URI would resolve to "/Resource/thing" and the first
-   item's "up" relation SHOULD be resolved to the resource at
-   "/Resource/parent".  The "children" collection would be located at
-   "/Resource/?upId=thing".
-
-6.1.1.3.  targetSchema
-
-   This property value is a schema that defines the expected structure
-   of the JSON representation of the target of the link.
-
-6.1.1.4.  Submission Link Properties
-
-   The following properties also apply to link definition objects, and
-   provide functionality analogous to HTML forms, in providing a means
-   for submitting extra (often user supplied) information to send to a
-   server.
-
-6.1.1.4.1.  method
-
-   This attribute defines which method can be used to access the target
-   resource.  In an HTTP environment, this would be "GET" or "POST"
-   (other HTTP methods such as "PUT" and "DELETE" have semantics that
-   are clearly implied by accessed resources, and do not need to be
-   defined here).  This defaults to "GET".
-
-6.1.1.4.2.  enctype
-
-   If present, this property indicates a query media type format that
-   the server supports for querying or posting to the collection of
-   instances at the target resource.  The query can be suffixed to the
-   target URI to query the collection with property-based constraints on
-   the resources that SHOULD be returned from the server or used to post
-   data to the resource (depending on the method).  For example, with
-   the following schema:
-
-   {
-    "links":[
-      {
-        "enctype":"application/x-www-form-urlencoded",
-        "method":"GET",
-        "href":"/Product/",
-        "properties":{
-           "name":{"description":"name of the product"}
-        }
-      }
-    ]
-   }
-
-   This indicates that the client can query the server for instances
-   that have a specific name:
-
-   /Product/?name=Slinky
-
-   If no enctype or method is specified, only the single URI specified
-   by the href property is defined.  If the method is POST,
-   "application/json" is the default media type.
-
-6.1.1.4.3.  schema
-
-   This attribute contains a schema which defines the acceptable
-   structure of the submitted request (for a GET request, this schema
-   would define the properties for the query string and for a POST
-   request, this would define the body).
-
+######6.1.1.4.3 schema######
+此属性包含一个用于约束定义提交请求的数据结构，在GET请求中，此schema定义查询字符串所需的属性，而在POST请求中，则会在主体部分被定义。
+   
 6.2.  fragmentResolution
 
    This property indicates the fragment resolution protocol to use for
@@ -610,7 +507,7 @@ JSON Schema 对象可以包含下面描述的属性，我们将其定义为schem
    This attribute defines the media type of the instance representations
    that this schema is defining.
 
-7.  Security Considerations
+##七、安全因素##
 
    This specification is a sub-type of the JSON format, and consequently
    the security considerations are generally the same as RFC 4627
@@ -679,271 +576,4 @@ Content-Type: application/json; profile=/schema-for-this-data
    specification adds four values: "full", "create", "instances",
    "root".  New assignments are subject to IESG Approval, as outlined in
    RFC 5226 [RFC5226].  Requests should be made by email to IANA, which
-   will then forward the request to the IESG, requesting approval.
-
-9.  References
-
-9.1.  Normative References
-
-   [RFC2045]                          Freed, N. and N. Borenstein,
-                                      "Multipurpose Internet Mail
-                                      Extensions (MIME) Part One: Format
-                                      of Internet Message Bodies",
-                                      RFC 2045, November 1996.
-
-   [RFC2119]                          Bradner, S., "Key words for use in
-                                      RFCs to Indicate Requirement
-                                      Levels", BCP 14, RFC 2119,
-                                      March 1997.
-
-   [RFC2396]                          Berners-Lee, T., Fielding, R., and
-                                      L. Masinter, "Uniform Resource
-                                      Identifiers (URI): Generic
-                                      Syntax", RFC 2396, August 1998.
-
-   [RFC3339]                          Klyne, G., Ed. and C. Newman,
-                                      "Date and Time on the Internet:
-                                      Timestamps", RFC 3339, July 2002.
-
-   [RFC3986]                          Berners-Lee, T., Fielding, R., and
-                                      L. Masinter, "Uniform Resource
-                                      Identifier (URI): Generic Syntax",
-                                      STD 66, RFC 3986, January 2005.
-
-   [RFC4287]                          Nottingham, M., Ed. and R. Sayre,
-                                      Ed., "The Atom Syndication
-                                      Format", RFC 4287, December 2005.
-
-9.2.  Informative References
-
-   [RFC2616]                          Fielding, R., Gettys, J., Mogul,
-                                      J., Frystyk, H., Masinter, L.,
-
-
-
-Zyp & Court               Expires May 26, 2011                 [Page 24]
-
-Internet-Draft           JSON Schema Media Type            November 2010
-
-
-                                      Leach, P., and T. Berners-Lee,
-                                      "Hypertext Transfer Protocol --
-                                      HTTP/1.1", RFC 2616, June 1999.
-
-   [RFC4627]                          Crockford, D., "The application/
-                                      json Media Type for JavaScript
-                                      Object Notation (JSON)", RFC 4627,
-                                      July 2006.
-
-   [RFC5226]                          Narten, T. and H. Alvestrand,
-                                      "Guidelines for Writing an IANA
-                                      Considerations Section in RFCs",
-                                      BCP 26, RFC 5226, May 2008.
-
-   [I-D.hammer-discovery]             Hammer-Lahav, E., "LRDD: Link-
-                                      based Resource Descriptor
-                                      Discovery",
-                                      draft-hammer-discovery-06 (work in
-                                      progress), May 2010.
-
-   [I-D.gregorio-uritemplate]         Gregorio, J., Fielding, R.,
-                                      Hadley, M., and M. Nottingham,
-                                      "URI Template",
-                                      draft-gregorio-uritemplate-04
-                                      (work in progress), March 2010.
-
-   [I-D.nottingham-http-link-header]  Nottingham, M., "Web Linking", dra
-                                      ft-nottingham-http-link-header-10
-                                      (work in progress), May 2010.
-
-   [W3C.REC-html401-19991224]         Raggett, D., Hors, A., and I.
-                                      Jacobs, "HTML 4.01 Specification",
-                                      World Wide Web Consortium Recommen
-                                      dation REC-html401-19991224,
-                                      December 1999, <http://www.w3.org/
-                                      TR/1999/REC-html401-19991224>.
-
-   [W3C.CR-CSS21-20070719]            Hickson, I., Lie, H., Celik, T.,
-                                      and B. Bos, "Cascading Style
-                                      Sheets Level 2 Revision 1 (CSS
-                                      2.1) Specification", World Wide
-                                      Web Consortium CR CR-CSS21-
-                                      20070719, July 2007, <http://
-                                      www.w3.org/TR/2007/
-                                      CR-CSS21-20070719>.
-
-
-
-
-
-
-Zyp & Court               Expires May 26, 2011                 [Page 25]
-
-Internet-Draft           JSON Schema Media Type            November 2010
-
-
-Appendix A.  Change Log
-
-   draft-03
-
-      *  Added example and verbiage to "extends" attribute.
-
-      *  Defined slash-delimited to use a leading slash.
-
-      *  Made "root" a relation instead of an attribute.
-
-      *  Removed address values, and MIME media type from format to
-         reduce confusion (mediaType already exists, so it can be used
-         for MIME types).
-
-      *  Added more explanation of nullability.
-
-      *  Removed "alternate" attribute.
-
-      *  Upper cased many normative usages of must, may, and should.
-
-      *  Replaced the link submission "properties" attribute to "schema"
-         attribute.
-
-      *  Replaced "optional" attribute with "required" attribute.
-
-      *  Replaced "maximumCanEqual" attribute with "exclusiveMaximum"
-         attribute.
-
-      *  Replaced "minimumCanEqual" attribute with "exclusiveMinimum"
-         attribute.
-
-      *  Replaced "requires" attribute with "dependencies" attribute.
-
-      *  Moved "contentEncoding" attribute to hyper schema.
-
-      *  Added "additionalItems" attribute.
-
-      *  Added "id" attribute.
-
-      *  Switched self-referencing variable substitution from "-this" to
-         "@" to align with reserved characters in URI template.
-
-      *  Added "patternProperties" attribute.
-
-      *  Schema URIs are now namespace versioned.
-
-      *  Added "$ref" and "$schema" attributes.
-
-
-
-
-Zyp & Court               Expires May 26, 2011                 [Page 26]
-
-Internet-Draft           JSON Schema Media Type            November 2010
-
-
-   draft-02
-
-      *  Replaced "maxDecimal" attribute with "divisibleBy" attribute.
-
-      *  Added slash-delimited fragment resolution protocol and made it
-         the default.
-
-      *  Added language about using links outside of schemas by
-         referencing its normative URI.
-
-      *  Added "uniqueItems" attribute.
-
-      *  Added "targetSchema" attribute to link description object.
-
-   draft-01
-
-      *  Fixed category and updates from template.
-
-   draft-00
-
-      *  Initial draft.
-
-Appendix B.  Open Issues
-
-      Should we give a preference to MIME headers over Link headers (or
-      only use one)?
-
-      Should "root" be a MIME parameter?
-
-      Should "format" be renamed to "mediaType" or "contentType" to
-      reflect the usage MIME media types that are allowed?
-
-      How should dates be handled?
-
-Authors' Addresses
-
-   Kris Zyp (editor)
-   SitePen (USA)
-   530 Lytton Avenue
-   Palo Alto, CA 94301
-   USA
-
-   Phone: +1 650 968 8787
-   EMail: kris@sitepen.com
-
-
-
-
-
-
-
-Zyp & Court               Expires May 26, 2011                 [Page 27]
-
-Internet-Draft           JSON Schema Media Type            November 2010
-
-
-   Gary Court
-   Calgary, AB
-   Canada
-
-   EMail: gary.court@gmail.com
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-Zyp & Court               Expires May 26, 2011                 [Page 28]
-
+   will then forward the request to the IESG, requesting approval.
