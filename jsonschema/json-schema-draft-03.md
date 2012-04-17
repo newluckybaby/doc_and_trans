@@ -72,7 +72,7 @@ JSON Schema由多个独立的规范组成。核心规范部分主要用于对JSO
 上面例子中的schema描述了一个JSON文档实例中哪些属性（id，name，price）是必要的，而哪些属性(tags)是可选的。链接则表达的是JSON文档实例之间的关系。
 
 ###3.1  术语###
-在本规范中，**schema**专指JSON Schema；**实例**专指schema所描述或校验的JSON值。
+在本规范中，**schema**专指基于JSON Schema的定义；**实例**专指schema所描述或校验的JSON值。
 
 ###3.2  设计考虑因素###
 JSON Schema所做的不止是对JSON对象数据在结构上进行规范约束，同时也对数据如何解析、校验进行定义，在考虑扩展性的前提下，终端设备才有可能在解析JSON文档中的结构以及超链接信息时保持足够的准确度。另外，JSON文档中数据结构复杂多变的特征也要求schema的高的扩展性。
@@ -465,49 +465,40 @@ JSON Schema 对象可以包含下面描述的属性，我们将其定义为schem
 此属性用于定义实例的媒体类型。
 
 ##七、安全因素##
-
-   This specification is a sub-type of the JSON format, and consequently
-   the security considerations are generally the same as RFC 4627
-   [RFC4627].  However, an additional issue is that when link relation
-   of "self" is used to denote a full representation of an object, the
-   user agent SHOULD NOT consider the representation to be the
-   authoritative representation of the resource denoted by the target
-   URI if the target URI is not equivalent to or a sub-path of the the
-   URI used to request the resource representation which contains the
-   target URI with the "self" link.  For example, if a hyper schema was
-   defined:
-   {
-     "links":[
+This specification is a sub-type of the JSON format, and consequently the security considerations are generally the same as RFC 4627[RFC4627].  However, an additional issue is that when link relation of "self" is used to denote a full representation of an object, the user agent SHOULD NOT consider the representation to be the authoritative representation of the resource denoted by the target URI if the target URI is not equivalent to or a sub-path of the the URI used to request the resource representation which contains the target URI with the "self" link.  For example, if a hyper schema was defined:
+    
+    {
+    	"links":[
            {
              "rel":"self",
              "href":"{id}"
            }
-     ]
-   }
+    	]
+    }
+      
+ And a resource was requested from somesite.com:
 
-   And a resource was requested from somesite.com:
+	GET /foo/
 
-   GET /foo/
+With a response of:
 
-   With a response of:
+	Content-Type: application/json; profile=/schema-for-this-data
+	
+    [{
+        "id": "bar",
+        "name": "This representation can be safely treated as authoritative"
+    },
+    {
+        "id": "/baz",
+        "name": "This representation should not be treated as authoritative the user agent should make request the resource from " /baz " to ensure it has the authoritative representation"
+    },
+    {
+        "id": "http://othersite.com/something",
+        "name": "This representation should also not be treated as authoritative and the target resource representation should be retrieved for the authoritative representation"
+    }]
 
-Content-Type: application/json; profile=/schema-for-this-data
-[
-  {"id":"bar", "name":"This representation can be safely treated \
-        as authoritative "},
-  {"id":"/baz", "name":"This representation should not be treated as \
-        authoritative the user agent should make request the resource\
-        from "/baz" to ensure it has the authoritative representation"},
-  {"id":"http://othersite.com/something", "name":"This representation\
-        should also not be treated as authoritative and the target\
-        resource representation should be retrieved for the\
-        authoritative representation"}
-]
-
-8.  IANA Considerations
-
-   The proposed MIME media type for JSON Schema is "application/
-   schema+json".
+##八、IANA注意事项##
+The proposed MIME media type for JSON Schema is "application/schema+json".
 
    Type name: application
 
@@ -515,17 +506,12 @@ Content-Type: application/json; profile=/schema-for-this-data
 
    Required parameters: profile
 
-   The value of the profile parameter SHOULD be a URI (relative or
-   absolute) that refers to the schema used to define the structure of
-   this structure (the meta-schema).  Normally the value would be
-   http://json-schema.org/draft-03/hyper-schema, but it is allowable to
-   use other schemas that extend the hyper schema's meta- schema.
+   The value of the profile parameter SHOULD be a URI (relative or absolute) that refers to the schema used to define the structure of this structure (the meta-schema).  
+   Normally the value would be http://json-schema.org/draft-03/hyper-schema, but it is allowable to use other schemas that extend the hyper schema's meta- schema.
 
    Optional parameters: pretty
 
-   The value of the pretty parameter MAY be true or false to indicate if
-   additional whitespace has been included to make the JSON
-   representation easier to read.
+   The value of the pretty parameter MAY be true or false to indicate if additional whitespace has been included to make the JSON representation easier to read.
 
-####8.1.  Registry of Link Relations####
+###8.1 Registry of Link Relations###
 This registry is maintained by IANA per RFC 4287 [RFC4287] and this specification adds four values: "full", "create", "instances","root".  New assignments are subject to IESG Approval, as outlined in RFC 5226 [RFC5226].  Requests should be made by email to IANA, which will then forward the request to the IESG, requesting approval.
