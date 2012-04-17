@@ -7,9 +7,9 @@ JSON(Javascript Object Notation) Schema 是对“application/schema+json”的�
    
 此**互联网草案**以符合BCP 78与BCP 79规定的方式进行提交。
 
-所谓**互联网草案**是指**互联网工程工作组**的工作文档，需要注意的是其他工作组也可以将此文档以**互联网草案**的形式分发。可以通过[http://datatracker.ietf.org/drafts/current/](http://datatracker.ietf.org/drafts/current/)查看当前已存在的**互联网草案**。
+所谓**互联网草案**是指**互联网工程工作组**的工作文档，需要注意的是其他工作组也可以将此文档以**互联网草案**的形式分发。可访问[http://datatracker.ietf.org/drafts/current/](http://datatracker.ietf.org/drafts/current/)查看当前已存在的**互联网草案**。
 
-此文档过期时间为二零一一年五月二十六日。
+此文档失效时间为二零一一年五月二十六日。
 
 ##版权声明##
 Copyright (c) 2010 版权归互联网工程工作组以及作者所有。
@@ -196,10 +196,10 @@ JSON Schema 对象可以包含下面描述的属性，我们将其定义为schem
 此属性用于定义当实例为数字类型时实例的最大值。
 
 ###5.11 exclusiveMinimum###
-此属性用于标示当实例为数字类型时实例值是否可以为minium中设定的最小值。默认值为false，即实例值可以大于等于最小值。
+此属性用于标识当实例为数字类型时实例值是否可以为minium中设定的最小值。默认值为false，即实例值可以大于等于最小值。
 
 ###5.12 exclusiveMaximum###
-此属性用于标示当实例为数字类型时实例值是否可以为maxinum中设定的最大值。默认值为false，即实例值可以小于等于最大值。
+此属性用于标识当实例为数字类型时实例值是否可以为maxinum中设定的最大值。默认值为false，即实例值可以小于等于最大值。
 
 ###5.13 minItems###
 此属性用于定义当实例为数组类型时所包含的最少项。
@@ -208,7 +208,7 @@ JSON Schema 对象可以包含下面描述的属性，我们将其定义为schem
 此属性用于定义当实例为数组类型是所包含的最多项。
 
 ###5.15 uniqueItems###
-此属性用于标示当实例为数组类型时数组的每项是否**必须**是唯一的。如果两个实例出现下列情况中的任意一种即被认为是相等的：
+此属性用于标识当实例为数组类型时数组的每项是否**必须**是唯一的。如果两个实例出现下列情况中的任意一种即被认为是相等的：
 
 * 值都为null；
 * 类型为布尔、数字或者字符串，值相等；
@@ -316,7 +316,7 @@ JSON Schema 对象可以包含下面描述的属性，我们将其定义为schem
 如果大括号中包含字符串@，那么就是当前整个实例而不是单个属性替换掉大括号中的字符串。通常只有在实例为原始类型（字符串，布尔，数字）时才会有这样的场景。
 
 #####6.1.1.2 rel#####
-此属性值用于标示实例与目标之间的关系名称。与目标的关系需要明确表达的不止是父包含子、子继承父的关系，实例对象与schema，sub-schema之间的关系也**应该**解释清楚。如果一个JSON类型的资源以链接的形式包含一个类型为对象的属性，那么子对象就和此资源建立了关系。另外资源与描述资源的schema之间的关系也**必须**明确标示。
+此属性值用于标识实例与目标之间的关系名称。与目标的关系需要明确表达的不止是父包含子、子继承父的关系，实例对象与schema，sub-schema之间的关系也**应该**解释清楚。如果一个JSON类型的资源以链接的形式包含一个类型为对象的属性，那么子对象就和此资源建立了关系。另外资源与描述资源的schema之间的关系也**必须**明确标识。
 
 关系定义**应该**与媒体类型**无**依赖关系。尽管鼓励用户利用已有被广泛接受的关系定义，包括已存在的关系注册[RFC4287](http://tools.ietf.org/html/rfc4287)。不过我们已经定义了清晰的处于JSON Hyper Schema上下文的关系定义：
 
@@ -370,12 +370,13 @@ JSON Schema 对象可以包含下面描述的属性，我们将其定义为schem
 下面提到的属性同样应用与链接定义对象，不过其主要目的是为了模拟一个类似HTML表单便于向服务器端提供一些额外的数据，而这些数据通常是有用户提供的。
 
 ######6.1.1.4.1 method######
-此属性用于定义访问目标资源的method，在HTTP环境中，其值可以为GET或者POST，类似PUT、DELETE的带有明显语义的HTTP方法不需要在这里定义。默认值为GET。
+此属性用于定义访问目标资源的method，在HTTP环境中，其值可以为GET或者POST，类似PUT、DELETE等带有明显语义的HTTP方法不需要在此处定义。默认值为GET。
 
 ######6.1.1.4.2 enctype######
 若设置此属性，则表示服务端在查询提交实例集合时所支持的查询媒体类型格式。此类查询会将此属性值以后缀的形式附加在目标URI后去查询服务端返回的基于属性约束的集合或者提交数据到目标资源。
 
 以下面的schema为例：
+
     {
         "links": [{
             "enctype": "application/x-www-form-urlencoded",
@@ -398,114 +399,70 @@ JSON Schema 对象可以包含下面描述的属性，我们将其定义为schem
 ######6.1.1.4.3 schema######
 此属性包含一个用于约束定义提交请求的数据结构，在GET请求中，此schema定义查询字符串所需的属性，而在POST请求中，则会在主体部分被定义。
    
-6.2.  fragmentResolution
+###6.2 fragmentResolution###
+此属性表示为了处理基于URI方式的资源引用而采用的片段分辩协议，这里提到的URI包括实例对象与子级实例对象。默认的碎片分辩协议是"斜线分割"，也是接下来我们要阐述的。其他片段分辩协议也**可能**会被用到，但不在本规范的讨论范围内。片段识别基于[RFC2396](http://tools.ietf.org/html/rfc2396)，其主要定义的是一套文档内容引用机制。
 
-   This property indicates the fragment resolution protocol to use for
-   resolving fragment identifiers in URIs within the instance
-   representations.  This applies to the instance object URIs and all
-   children of the instance object's URIs.  The default fragment
-   resolution protocol is "slash-delimited", which is defined below.
-   Other fragment resolution protocols MAY be used, but are not defined
-   in this document.
+####6.2.1 slash-delimited(斜线分割)型片段分辩协议####
+所谓斜线分割的片段分辩协议，主要是通过使用"/"（\x2F）对片段标记进行分割后将其转化为一套的属性引用指令（token），而每个属性引用指令都是直接由URI字符或由经过脱字处理(escape)过的URI字符组成，它会被解析成JSON结构中的引用。最终获取目标值的过程是，首先，对URI片段进行分析得出属性引用指令，然后从JSON结构的根节点开始，逐个使用属性引用指令获取目标值，如果获取的目标是一个JSON对象，那么就接下来就获取此对象上属性名为下个指令标识的属性值，如果获取的目标是一个数组，那么接下来就获取此数组中下个指令所表示的下标值（指令此时必须为数字）所对应的项，如此类推，只至处理完所有属性引用指令。
 
-   The fragment identifier is based on RFC 2396, Sec 5 [RFC2396], and
-   defines the mechanism for resolving references to entities within a
-   document.
+属性名称**应该**经过URI编码处理，尤其需要注意的是，当属性名称中出现"/"**必须**经过编码才能避免被识别为属性分隔符。
 
-6.2.1.  slash-delimited fragment resolution
+以下面的JSON数据为例：
 
-   With the slash-delimited fragment resolution protocol, the fragment
-   identifier is interpreted as a series of property reference tokens
-   that start with and are delimited by the "/" character (\x2F).  Each
-   property reference token is a series of unreserved or escaped URI
-   characters.  Each property reference token SHOULD be interpreted,
-   starting from the beginning of the fragment identifier, as a path
-   reference in the target JSON structure.  The final target value of
-   the fragment can be determined by starting with the root of the JSON
-   structure from the representation of the resource identified by the
-   pre-fragment URI.  If the target is a JSON object, then the new
-   target is the value of the property with the name identified by the
-   next property reference token in the fragment.  If the target is a
-   JSON array, then the target is determined by finding the item in
-   array the array with the index defined by the next property reference
-   token (which MUST be a number).  The target is successively updated
-   for each property reference token, until the entire fragment has been
-   traversed.
+    {
+        "foo": {
+            "anArray": [{
+                "prop": 44
+            }],
+            "another prop": {
+                "baz": "A string"
+            }
+        }
+    }
 
-   Property names SHOULD be URI-encoded.  In particular, any "/" in a
-   property name MUST be encoded to avoid being interpreted as a
-   property delimiter.
+片段标识及分辩结果：
 
-   For example, for the following JSON representation:
+<table style="width:100%;">
+<tr>
+	<th>片段标识</th>
+	<th>分辩结果</th>
+</tr>
+<tr>
+	<td>#</td>
+	<td>自身，资源根节点</td>
+</tr>
+<tr>
+	<td>/foo</td>
+	<td>foo属性</td>
+</tr>
+<tr>
+	<td>/foo/another%20prop/baz</td>
+	<td>anthor prop中baz所对应的字符串，即"A String""</td>
+</tr>
+<tr>
+	<td>/foo/anArray/0</td>
+	<td>foo中anArray的下标值为0的项（第一项）。</td>
+</tr>
+</table>
 
-   {
-     "foo":{
-       "anArray":[
-         {"prop":44}
-       ],
-       "another prop":{
-         "baz":"A string"
-       }
-     }
-   }
+####6.2.2  dot-delimited（点分割）型片段分辩协议####
 
-   The following fragment identifiers would be resolved:
+点分割的片段分辨协议与斜线分割的片段分辩协议不同之外在与在分割符上的区别，点分割的片段分辩协议的分割符为"."（\x2E），而其他大部分特征都是相同的。
 
-   fragment identifier      resolution
-   -------------------      ----------
-   #                        self, the root of the resource itself
-   #/foo                    the object referred to by the foo property
-   #/foo/another%20prop     the object referred to by the "another prop"
-                            property of the object referred to by the
-                            "foo" property
-   #/foo/another%20prop/baz the string referred to by the value of "baz"
-                            property of the "another prop" property of
-                            the object referred to by the "foo" property
-   #/foo/anArray/0          the first object in the "anArray" array
+###6.3 readonly###
 
-6.2.2.  dot-delimited fragment resolution
-
-   The dot-delimited fragment resolution protocol is the same as slash-
-   delimited fragment resolution protocol except that the "." character
-   (\x2E) is used as the delimiter between property names (instead of
-   "/") and the path does not need to start with a ".".  For example,
-   #.foo and #foo are a valid fragment identifiers for referencing the
-   value of the foo propery.
-
-6.3.  readonly
-
-   This attribute indicates that the instance property SHOULD NOT be
-   changed.  Attempts by a user agent to modify the value of this
-   property are expected to be rejected by a server.
-
-6.4.  contentEncoding
-
-   If the instance property value is a string, this attribute defines
-   that the string SHOULD be interpreted as binary data and decoded
-   using the encoding named by this schema property.  RFC 2045, Sec 6.1
-   [RFC2045] lists the possible values for this property.
-
-6.5.  pathStart
-
-   This attribute is a URI that defines what the instance's URI MUST
-   start with in order to validate.  The value of the "pathStart"
-   attribute MUST be resolved as per RFC 3986, Sec 5 [RFC3986], and is
-   relative to the instance's URI.
-
-   When multiple schemas have been referenced for an instance, the user
-   agent can determine if this schema is applicable for a particular
-   instance by determining if the URI of the instance begins with the
-   the value of the "pathStart" attribute.  If the URI of the instance
-   does not start with this URI, or if another schema specifies a
-   starting URI that is longer and also matches the instance, this
-   schema SHOULD NOT be applied to the instance.  Any schema that does
-   not have a pathStart attribute SHOULD be considered applicable to all
-   the instances for which it is referenced.
-
-6.6.  mediaType
-
-   This attribute defines the media type of the instance representations
-   that this schema is defining.
+此属性用于标识实例是否**不应当**发生改变。终端设备对此属性的修改可能会被服务器拒绝。
+  
+###6.4 contentEncoding###
+此属性定义在实例属性为字符串的情况下，二进制字符串会以何种编码进行解码。[RFC2045](http://tools.ietf.org/html/rfc2045)章节6.1列出此属性的可取值。
+ 
+###6.5.  pathStart###
+此属性值为URI，用于定义以此URI为起始的实例才会校验。此属性值**必须**根据[RFC3986](http://tools.ietf.org/html/rfc3986)相对实例URI进行设定。
+   
+当一个实例引用多个schema时，终端设备可以通过pathStart属性值来判断schema在实例中的适用范围。如果实例的URI不是以此属性值为起始或其他指定起始URI的schema不再匹配此实例，那么这个schema就**应该**应用在此实例上。任何不包含pathStart的schema应用范围将会是引用它的实例全部。
+  
+###6.6 mediaType###
+此属性用于定义实例的媒体类型。
 
 ##七、安全因素##
 
@@ -570,10 +527,5 @@ Content-Type: application/json; profile=/schema-for-this-data
    additional whitespace has been included to make the JSON
    representation easier to read.
 
-8.1.  Registry of Link Relations
-
-   This registry is maintained by IANA per RFC 4287 [RFC4287] and this
-   specification adds four values: "full", "create", "instances",
-   "root".  New assignments are subject to IESG Approval, as outlined in
-   RFC 5226 [RFC5226].  Requests should be made by email to IANA, which
-   will then forward the request to the IESG, requesting approval.
+####8.1.  Registry of Link Relations####
+This registry is maintained by IANA per RFC 4287 [RFC4287] and this specification adds four values: "full", "create", "instances","root".  New assignments are subject to IESG Approval, as outlined in RFC 5226 [RFC5226].  Requests should be made by email to IANA, which will then forward the request to the IESG, requesting approval.
