@@ -500,18 +500,17 @@ With a response of:
 ##八、IANA注意事项##
 The proposed MIME media type for JSON Schema is "application/schema+json".
 
-   Type name: application
+    Type name: application
 
-   Subtype name: schema+json
+    Subtype name: schema+json
 
-   Required parameters: profile
+    Required parameters: profile
 
-   The value of the profile parameter SHOULD be a URI (relative or absolute) that refers to the schema used to define the structure of this structure (the meta-schema).  
-   Normally the value would be http://json-schema.org/draft-03/hyper-schema, but it is allowable to use other schemas that extend the hyper schema's meta- schema.
+   The value of the profile parameter SHOULD be a URI (relative or absolute) that refers to the schema used to define the structure of this structure (the meta-schema). Normally the value would be http://json-schema.org/draft-03/hyper-schema, but it is allowable to use other schemas that extend the hyper schema's meta- schema.
 
-   Optional parameters: pretty
+    Optional parameters: pretty
 
-   The value of the pretty parameter MAY be true or false to indicate if additional whitespace has been included to make the JSON representation easier to read.
+The value of the pretty parameter MAY be true or false to indicate if additional whitespace has been included to make the JSON representation easier to read.
 
 ###8.1 Registry of Link Relations###
 This registry is maintained by IANA per RFC 4287 [RFC4287] and this specification adds four values: "full", "create", "instances","root".  New assignments are subject to IESG Approval, as outlined in RFC 5226 [RFC5226].  Requests should be made by email to IANA, which will then forward the request to the IESG, requesting approval.
