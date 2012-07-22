@@ -1,0 +1,22 @@
+= 安装VirtualBox =
+* 添加对应版本o的第三方源，编辑/etc/apt/source.list，对于10.04：
+
+{{{
+deb http://download.virtualbox.org/virtualbox/debian lucid contrib non-free
+}}}
+
+* 导入公钥
+
+{{{
+wget -q http://download.virtualbox.org/virtualbox/debian/oracle_vbox.asc -O- | sudo apt-key add -
+}}}
+
+* 更新并安装virtualbox
+
+{{{
+sudo apt-get update
+sudo apt-get install virtualbox-4
+}}}
+
+== 参考文档 ==
+* [http://www.virtualbox.org/wiki/Linux_Downloads VirtualBox for Linux]

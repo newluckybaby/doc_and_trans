@@ -1,0 +1,131 @@
+<!doctype html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title>Linux Guide for Front-End Developer</title>
+    <link rel="stylesheet" href="./assets/g.css" charset="utf-8" />
+</head>
+<body>
+<div id="page">
+    <div id="header">
+        <div class="entity">
+            <h4><a href="index.html">Linux Guide for Front-End Developer</a><sup>Edition 0.1</sup></h4>
+        </div>
+    </div>
+    <div id="content">
+        <div class="post-entity">
+<h1 id="toc_1">安装配置Apache以及相关Module</h1>
+<p>
+当前假设你已经安装ubuntu 10.04或其他ubuntu版本，建议你不要尝试从source编译安装，ubuntu方便的包管理就是为了节约你的生命。
+</p>
+
+<h2 id="toc_1.1">安装ubuntu</h2>
+<pre>
+sudo apt-get install apache2
+</pre>
+<p>
+选择安装prework
+</p>
+<pre>
+sudo apt-get install apache2-mpm-prework
+</pre>
+<h2 id="toc_1.2">安装并启用核心模块</h2>
+<p>
+同window环境不同，module在window下是以dll文件存在，而在linux下是以so文件存在。
+以proxy module为例，安装并激活你需要执行以下命令，添加后apache会重新启动
+</p>
+<pre>
+sudo a2enmod proxy
+</pre>
+<h2 id="toc_1.3">安装并启用第三方模块</h2>
+<p>
+第三方模块通常是以apxs方法安装的， 在ubuntu下首先你需要安装apache2-utils
+</p>
+<pre>
+sudo apt-get install apache2-utils 
+</pre>
+<p>
+以mod_concat为例，下载mod_concat源代码后，在其目录内执行以下名称进行编译，编译完成后复制至module目录，module默认目录为 /usr/lib/apache2/modules
+</p>
+<pre>
+sudo apxs2 -c mod_concat.c
+</pre>
+<p>
+如果直接安装的话，只需要添加-i参数即可
+</p>
+<pre>
+sudo apxs2 -c -i mod_concat.c
+</pre>
+<p>
+mod_concat可以将静态文件合并以减少请求数的一个模块，了解更多可查看<a href="http://code.google.com/p/modconcat/">mod_concat@google code</a>
+<h2 id="toc_1.4">站点配置文件</h2>
+站点配置文件通常存放在/etc/apache2/sites-available下，由于默认会加载此目录下的所有文件，所以添加主机只需要在此目录下新增的vhost文件即可。以本地配置asset环境为例哦。
+</p>
+<pre>
+
+&lt;VirtualHost *:80&gt;
+ServerAdmin webmaster@localhost
+ServerName assets.daily.taobao.net
+ServerAlias assets.daily.taobao.net
+DocumentRoot /home/soda/Dev/assets_daily/assets
+
+&lt;Directory /&gt;
+    Options Indexes FollowSymLinks MultiViews
+    AllowOverride None
+    Order allow,deny
+    Allow from all
+    AddOutputFilterByType DEFLATE text/css
+    AddOutputFilterByType DEFLATE application/x-javascript
+&lt;/Directory&gt;
+
+Alias /apps "/home/soda/Dev/assets_daily/daily/apps"
+&lt;Directory "/home/soda/Dev/assets_daily/daily/apps/"&gt;
+    Options Indexes MultiViews FollowSymLinks
+    AllowOverride None
+    Order deny,allow
+    Allow from all
+    AddOutputFilterByType DEFLATE text/css
+    AddOutputFilterByType DEFLATE application/x-javascript
+&lt;/Directory&gt;
+&lt;/VirtualHost&gt;
+
+</pre>
+<p>
+如果我们需要设置反向代理，在安装proxy以及proxy相关模块后添加以下配置文件即可。
+</p>
+<pre>
+
+ProxyRequests On
+ProxyPreserveHost On
+ProxyVia full
+&lt;proxy&gt;
+    Order deny,allow
+    Allow from all
+&lt;/proxy&gt;
+
+ProxyPass /apps/dpm !
+ProxyPass /apps/ecrm !
+ProxyPass /apps/tradeface !
+ProxyPass /apps/sportal !
+ProxyPass / http://10.232.16.2/
+ProxyPassReverse / http://10.232.16.2/
+
+</pre>
+<p>
+关于assets前端开发环境的配置可参考以下链接文档中前端开发环境实战一文
+<h2 id="toc_1.5">参考文档</h2>
+</p>
+<ul>
+<li>
+<a href="apache_core_module.html">Apache常用核心模块参考</a>
+</li>
+<li>
+<a href="dev_in_action.html">前端开发环境实战</a>
+</li>
+</ul>
+        </div>
+    </div>
+    <div id="footer">copyright&copy;2011 <a href="http://creativecommons.org/licenses/by-nc-sa/2.5/cn/">some rights reserved</a> by <a href="http://www.cheshirecat.cn">Soda</a> E-mail:sodabiscuit(at)gmail.com. </div>
+</div>  
+</body>
+</html>

@@ -1,0 +1,21 @@
+= 安装以及配置php环境 =
+通常情况下，对于前端开发环境你不需要考虑过多的服务端的优化，简单安装就能满足你的需求。
+
+== 安装php5 ==
+{{{
+sudo apt-get install php5
+}}}
+== 配置php5 ==
+php5配置文件存放位置为 /etc/php5/apache2/php.ini，对于调试环境，较为重要的两个选项(全局)
+{{{
+error_reporting = E_ALL & ~E_STRICT
+display_errors = On
+}}}
+打开后，便于页面内容调试
+
+== 关于php-cgi,fastcgi,php5-fpm ==
+TODO 
+
+== 参考文档 ==
+* [http://php.net/error-reporting PHP Error Reporting Reference]
+* [http://alexcabal.com/installing-apache-mod_fastcgi-php-fpm-on-ubuntu-server-maverick/ Installing Apache + mod_fastcgi + PHP-FPM on Ubuntu Server]

@@ -1,0 +1,20 @@
+= 安装ubuntu桌面环境 =
+在工作机器上最方便的方法就是通过网络安装或者将光盘镜像烧录到U盘，通过将引导方式设置为U盘。这里假设的是你采用单系统的方式安装。单Linux系统的存在会让你更快的熟悉Linux。
+== 发行版本的选择 ==
+这里假设你选择的发行版本是ubuntu，对于ubuntu版本的选择，推荐你使用LTS版本(当前LTS最新版本为10.04)，不建议你使用最新的11.04（Natty）。
+== 网络安装ubuntu ==
+* 寻找合适的ubuntu源,下载网络安装所需要的文件,以国内[[http://mirrors.163.com/|163]]源,10.04LTS为例,目录如下:
+
+{{{ 
+ubuntu/dists/lucid/main/installer-i386/current/images/netboot/ubuntu-installer/i386/
+}}}
+* 下载initrd.gz,linux两个文件,复制到系统所在分区;
+* 下载EasyBCD,当前最新版本为2.0.1,避免使用1.7.2版本,在win7环境下可能会有提示MBR文件丢失的情况存在,安装完成后,在界面里选择Neogrub,安装后,点击配置,编辑menu.lst文件,示例如下:
+
+{{{ 
+title Install Ubuntu
+kernel (hd0,0)/linux
+initrd (hd0,0)/initrd.gz
+}}}
+(hd0,0)表示第一个磁盘的第一个分区,具体资料参考grub相关资料.
+* 重新启动系统,启动方式选择Neogrub->Install Ubuntu,按照提示安装即可.

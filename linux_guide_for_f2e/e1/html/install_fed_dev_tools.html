@@ -1,0 +1,110 @@
+<!doctype html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title>Linux Guide for Front-End Developer</title>
+    <link rel="stylesheet" href="./assets/g.css" charset="utf-8" />
+</head>
+<body>
+<div id="page">
+    <div id="header">
+        <div class="entity">
+            <h4><a href="index.html">Linux Guide for Front-End Developer</a><sup>Edition 0.1</sup></h4>
+        </div>
+    </div>
+    <div id="content">
+        <div class="post-entity">
+<h1 id="toc_1">安装前端开发工具</h1>
+<p>
+以下部分工具的安装你都可以在其官网找到，这里只是做了集中归纳。
+<h2 id="toc_1.1">安装JDK</h2>
+提及的yui-compressor，ant三方包都依赖JDK，安装SUN JDK的步骤较为简单，首先你需要启用Canonical源。编辑 /etc/apt/source.list进行修改。
+</p>
+<pre>
+sudo apt-get install sun-java6-jdk
+</pre>
+<p>
+切换为java-6-sun
+</p>
+<pre>
+sudo update-java-alternatives -s java-6-sun
+</pre>
+<h2 id="toc_1.2">安装javascript lint</h2>
+<ul>
+<li>
+获取最新的源文件
+</li>
+</ul>
+
+<pre>
+svn co https://javascriptlint.svn.sourceforge.net/svnroot/javascriptlint/trunk jsl
+</pre>
+
+<ul>
+<li>
+安装编译需要的包，主要是python-dev
+</li>
+</ul>
+
+<pre>
+sudo apt-get install python-dev
+</pre>
+
+<ul>
+<li>
+进入jsl目录，以python包安装
+</li>
+</ul>
+
+<pre>
+sudo python setup.py install
+</pre>
+
+<ul>
+<li>
+查看jsl安装位置
+</li>
+</ul>
+
+<pre>
+which jsl
+</pre>
+
+<h2 id="toc_1.3">安装Closure Linter</h2>
+
+<pre>
+sudo easy_install http://closure-linter.googlecode.com/files/closure_linter-latest.tar.gz
+</pre>
+
+<h2 id="toc_1.4">安装YUI Compressor</h2>
+<pre>
+sudo apt-get install yui-compressor
+</pre>
+
+<h2 id="toc_1.5">安装 Google Closure Compiler</h2>
+<p>
+官方只提供相应的jar包，下载后按照手册执行jar包即可。
+</p>
+
+<h2 id="toc_1.6">参考文档</h2>
+<ul>
+<li>
+<a href="http://code.google.com/closure/utilities/docs/linter_howto.html">How to Use Closure Linter</a>
+</li>
+<li>
+<a href="http://code.google.com/closure/compiler/">Google Closure Compiler</a>
+</li>
+</ul>
+
+<h2 id="toc_1.7">资源</h2>
+<ul>
+<li>
+<a href="tb-compressor.html">TB Compressor Shell Script</a>
+</li>
+</ul>
+        </div>
+    </div>
+    <div id="footer">copyright&copy;2011 <a href="http://creativecommons.org/licenses/by-nc-sa/2.5/cn/">some rights reserved</a> by <a href="http://www.cheshirecat.cn">Soda</a> E-mail:sodabiscuit(at)gmail.com. </div>
+</div>  
+</body>
+</html>

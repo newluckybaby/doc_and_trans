@@ -1,0 +1,21 @@
+= 安装小企鹅输入法 =
+ubuntu化境下默认的中文输入法是ibus，比较笨重不推荐使用。可以使用fcitx，也就是常说的小企鹅输入法。现在安装比较简单，添加ppa源即可。
+* 添加PPA源，更新source
+
+{{{
+sudo add-apt-repository ppa:wengxt/fcitx-nightly
+sudo apt-get update
+}}}
+
+* 安装fcitx，sunpinyin以及config tool
+ 
+{{{
+sudo apt-get install fcitx fcitx-sunpinyin fcitx-configtool
+}}}
+
+* 修改默认输入法
+System->Administration->Language Support->Keyboard input method system->fcitx; 
+
+参考文档
+* [https://launchpad.net/~wengxt/+archive/fcitx-nightly fcitx PPA Source]
+

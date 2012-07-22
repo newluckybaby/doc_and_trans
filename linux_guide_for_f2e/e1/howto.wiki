@@ -1,0 +1,11 @@
+== How to ==
+* [[install_ubuntu_desktop|安装Ubuntu Desktop]]
+* [[install_apache_on_ubuntu|安装配置Apache以及相关Module]]
+* [[install_php_and_fpm|安装php以及php_fpm]]
+* [[install_xterm|选择合适的终端环境]]
+* [[install_vim_and_get_conf_file|安装vim以及获取配置文件]]
+* [[install_fed_dev_tools|安装前端开发工具]]
+* [[install_version_control_tools|安装版本控制工具]]
+* [[install_cjk_input_method|安装小企鹅输入法]]
+* [[install_virtualbox|安装Window运行宿主环境VirtualBox]]
+* [[bashrc|bashrc配置]]

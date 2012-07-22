@@ -1,0 +1,20 @@
+= 安装vim及获取配置文件 =
+相对来说vim是linux下最好的文本编辑器，但其学习曲线相对来说要陡峭一些。最好的参考文档就是vim的手册。熟悉vim的一些基本操作，坚持下来，在平时的工作中不断熟悉，你会发现vim给你带来的乐趣。
+== 安装vim以及gvim ==
+安装vim用简单的包安装就可以，当前vim在官方源的版本为7.2。如果你喜欢使用7.3，7.3相对7.2来说主要功能改进点是无限历史回退功能。
+{{{
+sudo apt-get install vim
+}}}
+使用非GUI版本的vim，你需要的是一个配置好的终端环境，关于终端环境的选择，你可以参考选择终端环境一文。如果你觉得GUI版本的会更好一些。使用执行下面命令安装(gnome)。
+{{{
+sudo apt-get install vim-gnome
+}}}
+== 获取配置文件 ==
+对于vim来说，好的配置文件能让你提升效率和学习vim的兴趣。当前你可以参考手册进行配置，最快捷的方法就是使用别人已经做好的配置，在不断熟悉后，可以在其基础上修改，配置自己更为顺手的环境。
+你可以选择
+* soda的vim配置，包含了snipmate，yui-compressor,以及javascript lint，gjslint，gist等插件。
+* casecommons@github 更为清晰的插件目录
+更多的vim配置文件你可以在github上搜索下。
+== 资源 ==
+* [https://github.com/sodabiscuit/vim soda的vim配置]
+* [https://github.com/Casecommons/vim-config casecommons@github ]

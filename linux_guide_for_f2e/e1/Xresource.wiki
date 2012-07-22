@@ -1,0 +1,56 @@
+= ~/.Xresource =
+{{{
+Xft.dpi:96
+
+!xterm setting
+!look and feel
+!xterm*preeditType: root 
+xterm.termName: xterm-256color
+xterm*geometry: 90x30 
+xterm*scrollBar: false
+xterm*rightScrollBar: true
+xterm*loginshell: true
+xterm*background:  black
+!xterm*foreground:  gray
+xterm*foreground:  white
+xterm.borderLess: true
+xterm.cursorBlink: false
+xterm*renderFont: true
+xterm*colorUL: yellow
+xterm*colorBD: white
+!fix alt key input 
+xterm*eightBitInput: false
+xterm*altSendsEscape: true
+!print color and bold/underline attributes
+xterm*printAttributes: 2
+xterm*printerCommand: cat > ~/xtermdump
+!font and locale
+xterm*locale: true
+xterm.utf8:     true
+xterm*utf8Title: true
+xterm*fontMenu*fontdefault*Label: Default
+xterm*faceName: Droid Sans Mono-12:antialias=True
+xterm*faceNameDoublesize: wenquanyi micro hei-13
+xterm*xftAntialias: true
+xterm*cjkWidth:false           
+!-- Tango color scheme
+*xterm*color0: #2e3436
+*xterm*color1: #cc0000
+*xterm*color2: #4e9a06
+*xterm*color3: #c4a000
+*xterm*color4: #3465a4
+*xterm*color5: #75507b
+*xterm*color6: #0b939b
+*xterm*color7: #d3d7cf
+*xterm*color8: #555753
+*xterm*color9: #ef2929
+*xterm*color10: #8ae234
+*xterm*color11: #fce94f
+*xterm*color12: #729fcf
+*xterm*color13: #ad7fa8
+*xterm*color14: #00f5e9
+*xterm*color15: #eeeeec
+!-- enable fcitx shift
+XTerm*VT100*translations: #override \n\
+Shift <KeyRelease>:insert-seven-bit()
+}}}

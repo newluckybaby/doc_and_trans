@@ -1,0 +1,60 @@
+<!doctype html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title>Linux Guide for Front-End Developer</title>
+    <link rel="stylesheet" href="./assets/g.css" charset="utf-8" />
+</head>
+<body>
+<div id="page">
+    <div id="header">
+        <div class="entity">
+            <h4><a href="index.html">Linux Guide for Front-End Developer</a><sup>Edition 0.1</sup></h4>
+        </div>
+    </div>
+    <div id="content">
+        <div class="post-entity">
+<h1 id="toc_1">安装VirtualBox</h1>
+<ul>
+<li>
+添加对应版本o的第三方源，编辑/etc/apt/source.list，对于10.04：
+</li>
+</ul>
+
+<pre>
+deb http://download.virtualbox.org/virtualbox/debian lucid contrib non-free
+</pre>
+
+<ul>
+<li>
+导入公钥
+</li>
+</ul>
+
+<pre>
+wget -q http://download.virtualbox.org/virtualbox/debian/oracle_vbox.asc -O- | sudo apt-key add -
+</pre>
+
+<ul>
+<li>
+更新并安装virtualbox
+</li>
+</ul>
+
+<pre>
+sudo apt-get update
+sudo apt-get install virtualbox-4
+</pre>
+
+<h2 id="toc_1.1">参考文档</h2>
+<ul>
+<li>
+<a href="http://www.virtualbox.org/wiki/Linux_Downloads">VirtualBox for Linux</a>
+</li>
+</ul>
+        </div>
+    </div>
+    <div id="footer">copyright&copy;2011 <a href="http://creativecommons.org/licenses/by-nc-sa/2.5/cn/">some rights reserved</a> by <a href="http://www.cheshirecat.cn">Soda</a> E-mail:sodabiscuit(at)gmail.com. </div>
+</div>  
+</body>
+</html>

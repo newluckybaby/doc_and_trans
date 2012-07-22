@@ -1,0 +1,63 @@
+= TB Compressor Shell Script =
+{{{
+#!/bin/bash
+JAVA_CMD=java
+NATIVE2ASCII=native2ascii
+YUI_JAR=/usr/share/yui-compressor/yui-compressor.jar
+CHARSET=GB18030
+SUCCESS=0
+
+convert_charset(){
+    case $1 in
+        *.js)
+            cp $1 "$1.swp";
+            $NATIVE2ASCII -encoding $CHARSET "$1.swp" $1;
+            rm "$1.swp";;
+        *.css)
+            return 0;;
+        *)
+            exit 0;;
+    esac
+}
+
+build_target(){
+$JAVA_CMD -jar $YUI_JAR $1 -o $2;
+if [ $? = 0 ]; then
+    convert_charset $2;
+    echo "S $1";
+    SUCCESS=`expr $SUCCESS + 1`;
+else 
+    echo "F $1 <--Syntax error";
+fi
+}
+
+build_single(){
+    if [ -f $1 ]; then
+        case $1 in
+            *.source.css)
+                build_target $1 ${1/.source.css/.css};;
+            *.source.js)
+                build_target $1 ${1/.source.js/.js};;
+            *.css)
+                build_target $1 ${1/.css/-min.css};;
+            *.js)
+                build_target $1 ${1/.js/-min.js};;
+            *)
+                echo "F $1 <-INVALID file type";;
+        esac
+    else
+        echo "F $1 <--NOT exist"
+    fi
+}
+
+build_batch(){
+    for single;do
+        build_single $single
+    done
+    echo "--------------------";
+    echo "TOTAL:$#";
+    echo "FAILURE:`expr $# - $SUCCESS`"
+}
+#build_init "$@"
+build_batch "$@"
+}}}

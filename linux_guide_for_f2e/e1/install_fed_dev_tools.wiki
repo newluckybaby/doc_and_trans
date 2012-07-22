@@ -1,0 +1,56 @@
+= 安装前端开发工具 =
+以下部分工具的安装你都可以在其官网找到，这里只是做了集中归纳。
+== 安装JDK ==
+提及的yui-compressor，ant三方包都依赖JDK，安装SUN JDK的步骤较为简单，首先你需要启用Canonical源。编辑 /etc/apt/source.list进行修改。
+{{{
+sudo apt-get install sun-java6-jdk
+}}}
+切换为java-6-sun
+{{{
+sudo update-java-alternatives -s java-6-sun
+}}}
+== 安装javascript lint ==
+* 获取最新的源文件
+
+{{{
+svn co https://javascriptlint.svn.sourceforge.net/svnroot/javascriptlint/trunk jsl
+}}}
+
+* 安装编译需要的包，主要是python-dev
+
+{{{
+sudo apt-get install python-dev
+}}}
+
+* 进入jsl目录，以python包安装
+
+{{{
+sudo python setup.py install
+}}}
+
+* 查看jsl安装位置
+
+{{{
+which jsl
+}}}
+
+== 安装Closure Linter ==
+
+{{{
+sudo easy_install http://closure-linter.googlecode.com/files/closure_linter-latest.tar.gz
+}}}
+
+== 安装YUI Compressor ==
+{{{
+sudo apt-get install yui-compressor
+}}}
+
+== 安装 Google Closure Compiler ==
+官方只提供相应的jar包，下载后按照手册执行jar包即可。
+
+== 参考文档 ==
+* [http://code.google.com/closure/utilities/docs/linter_howto.html How to Use Closure Linter]
+* [http://code.google.com/closure/compiler/ Google Closure Compiler]
+
+== 资源 ==
+* [[tb-compressor|TB Compressor Shell Script]]
