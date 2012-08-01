@@ -83,7 +83,7 @@
 
 * [操作系统革命](http://movie.douban.com/subject/1437389/)
 
-![操作系统革命](resources/01-01.jpg)
+![操作系统革命](https://github.com/sodabiscuit/doc_and_trans/raw/master/linux_guide_for_f2e/e2/resources/01-01.jpg)
 
 > 《操作系统革命》（Revolution OS）是一部2001年由J·T·S·摩尔（J. T. S. Moore）导演的纪录片电影，该电影追述了GNU、Linux、自由软件运动以及开放源代码运动长达二十余年的历史。该片的主演有理查德·斯托曼、林纳斯·托瓦兹、布鲁斯·斐伦斯、拉里·奥古斯丁与埃里克·雷蒙等。
 
