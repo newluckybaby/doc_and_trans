@@ -1,4 +1,4 @@
-#基础知识#
+                                                                                                  #基础知识#
 
 本章将会介绍Linux的基础知识，包括文件系统、文件权限、桌面环境以及多个系统概念之间的关系。
 
@@ -15,6 +15,8 @@
 Linux常用的分区类型包括btrfs、ext3、ext4、reiserfs、reiser4、xfs、zfs等，较为常用和成熟的是ext3，它们之间的比较可以查看 [Wikipedia/Comparison_of_file_systems](http://en.wikipedia.org/wiki/Comparison_of_file_systems)。
 
 ###目录结构###
+
+与Windows不同，Linux中并没有盘符一说，它通过目录结构来区分不同功能的文件，下表列出的是目录及其描述。
 
 <table style="width:100%;">
 <colgroup>
@@ -155,7 +157,7 @@ Linux常用的分区类型包括btrfs、ext3、ext4、reiserfs、reiser4、xfs�
 
 ###文件链接###
 
-文件链接分为硬链接和软链接（符号链接），其主要不同点简单说在于软链接创建的指向原文件的新文件，而硬链接并不创建新文件，只是inode链接计数增加。关于他门的不同，可以通过[Linux中的软链接与硬链接](http://www.linuxeden.com/html/front/20100929/104946.html)一文来理解。
+文件链接分为硬链接和软链接（符号链接），其主要不同点简单说在于软链接创建的指向原文件的新文件，而硬链接并不创建新文件，只是inode链接计数增加。它们之间的区别可查看[Linux中的软链接与硬链接](http://www.linuxeden.com/html/front/20100929/104946.html)。
 
 我们通过下列方式来创建软链接：
 
