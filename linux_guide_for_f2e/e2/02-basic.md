@@ -151,15 +151,146 @@ Linux常用的分区类型包括btrfs、ext3、ext4、reiserfs、reiser4、xfs�
 
 ###挂载###
 
-###硬链接与软链接###
+在Linux环境中，常见的挂载包括U盘、移动硬盘、samba、windows网络共享等情况。当前大部分的发行版都默认安装了ntfs3g包，因此手动执行``mount``的情况并不多。关于常见命令以及一些概念可以通过[Wikipedia/Mount_(Unix)](http://en.wikipedia.org/wiki/Mount_(Unix))来查看。需要注意的是，大多数挂载出现的问题的主要由于文件系统和编码的不同引起的。
 
+###文件链接###
+
+文件链接分为硬链接和软链接（符号链接），其主要不同点简单说在于软链接创建的指向原文件的新文件，而硬链接并不创建新文件，只是inode链接计数增加。关于他门的不同，可以通过[Linux中的软链接与硬链接](http://www.linuxeden.com/html/front/20100929/104946.html)一文来理解。
+
+我们通过下列方式来创建软链接：
+
+    ln -s source_file link_name
+    
+如果移除参数 s,则表示创建了一个名称为link_name指向source_file的硬链接。需要主要的是，硬链接的创建会有几个限制条件，例如不能创建指向目录的硬链接、不能跨文件系统创建硬链接。
 
 ###文件类型##
 
-##权限管理##
+Linux下的文件可以分为以下几类：
+
+<table style="width:100%;text-align:center;">
+<tr>
+	<th>类型</th>
+	<td>常规文件</td>
+	<td>目录</td>
+	<td>符号链接</td>
+	<td>命名管道</td>
+	<td>socket</td>
+	<td>设备文件</td>
+	<td>门</td>
+</tr>
+<tr>
+	<th>符号表示</th>
+	<td>-</td>
+	<td>d</td>
+	<td>l</td>
+	<td>p</td>
+	<td>s</td>
+	<td>c（字符设备）、b（块设备）</td>
+	<td>D</td>
+</tr>
+</table>
+
+详细解释可查看 [Wikipedia/Unix_file_types](http://en.wikipedia.org/wiki/Unix_file_types)
+
+##文件权限管理##
+
+文件权限管理是Linux系统中最常执行的操作，例如你需要为一个shell脚本增加一个可执行权限或者为某一用户增加指定文件的读或者写权限。
 
 ###文件权限描述###
+
+变更文件权限前，通常会查看此文件当前的权限状态，例如执行：
+
+    ls -dl /etc/passwd
+
+输出结果为：
+
+    -rwxr-—r-- ... /etc/passwd
+
+前十个字符，则表示的是文件类型与文件权限，其中r表示读（read）权限，w表示写（write）权限，x则表示执行（execute）权限，完整的解释如下图所示。
 
 ![2-1 文件权限](https://raw.github.com/sodabiscuit/doc_and_trans/master/linux_guide_for_f2e/e2/resources/02-01.png)
 
 ###文件权限管理###
+
+文件权限管理常用的命令包括``chown``、``chgrp``、``chmod``。其中``chown``表示更改所有者，``chgrp``表示更改其所属权限组，下面的内容主要讲述我们最为常用的``chmod``。
+
+####绝对模式####
+
+``chmod``绝对模式的命令形式如下：
+
+    chmod path/to/file 777
+
+其中的777表示其拥有权限的绝对模式表示，其计算方式可参考下表：
+
+<table style="text-align:center;">
+<tr>
+	<th colspan="3">owner</th>
+	<th colspan="3">group</th>
+	<th colspan="3">everyone</th>
+</tr>
+<tr>
+	<td>read</td>
+	<td>write</td>
+	<td>execute</td>
+	<td>read</td>
+	<td>write</td>
+	<td>execute</td>
+	<td>read</td>
+	<td>write</td>
+	<td>execute</td>
+</tr>
+<tr>
+	<td>400</td>
+	<td>200</td>
+	<td>100</td>
+	<td>40</td>
+	<td>20</td>
+	<td>10</td>
+	<td>4</td>
+	<td>2</td>
+	<td>1</td>
+</tr>
+</table>
+
+####相对模式####
+
+``chmod``相对模式的命令形式如下：
+
+    chmod a+x path/to/file 777
+
+其中的「a」、「+」、「x」的含义可参考下表：
+
+<table style="text-align:center;">
+<tr>
+	<th>u</th>
+	<th>g</th>
+	<th>o</th>
+	<th>a</th>
+</tr>
+<tr>
+	<td>owner</td>
+	<td>group</td>
+	<td>everyone</td>
+	<td>all</td>
+</tr>
+</table>
+
+<table style="text-align:center;">
+<tr>
+	<th>+</th>
+	<th>-</th>
+	<th>=</th>
+</tr>
+<tr>
+	<td>add</td>
+	<td>remove</td>
+	<td>emulate absolute mode</td>
+</tr>
+</table>
+
+##桌面环境##
+
+与Window不同，Linux的桌面环境可以自定义，我们常见的Linux桌面环境包括GNOME、KDE、LXDE、Xfce等。桌面环境的主要组成部分是窗口管理器，窗口管理器可分为常见的X窗口管理器（例如GNOME采用的窗口管理器 Metacity），平铺式窗口管理器（例如awesome）。更多的桌面环境和窗口管理器可查看：
+
+* [Wikipedia/桌面环境](http://zh.wikipedia.org/wiki/%E6%A1%8C%E9%9D%A2%E7%8E%AF%E5%A2%83)
+* [Wikipedia/X窗口管理器](http://zh.wikipedia.org/zh-cn/X%E7%AA%97%E5%8F%A3%E7%AE%A1%E7%90%86%E5%99%A8)
