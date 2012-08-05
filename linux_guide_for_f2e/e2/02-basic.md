@@ -258,7 +258,7 @@ Linux下的文件可以分为以下几类：
 
 ``chmod``相对模式的命令形式如下：
 
-    chmod a+x path/to/file 777
+    chmod a+x path/to/file
 
 其中的「a」、「+」、「x」的含义可参考下表：
 
@@ -296,3 +296,7 @@ Linux下的文件可以分为以下几类：
 
 * [Wikipedia/桌面环境](http://zh.wikipedia.org/wiki/%E6%A1%8C%E9%9D%A2%E7%8E%AF%E5%A2%83)
 * [Wikipedia/X窗口管理器](http://zh.wikipedia.org/zh-cn/X%E7%AA%97%E5%8F%A3%E7%AE%A1%E7%90%86%E5%99%A8)
+
+---
+
+[上一章：介绍](00-introduction.md) [下一章：基础知识](03-installation.md)

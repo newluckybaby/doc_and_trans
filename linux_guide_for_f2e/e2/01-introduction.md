@@ -89,3 +89,7 @@
 
 * [大教堂与市集](http://www.aka.org.cn/Docs/c&b.html)
 
+---
+
+[上一章：前言](00-preface.md) [下一章：基础知识](02-basic.md)
+
