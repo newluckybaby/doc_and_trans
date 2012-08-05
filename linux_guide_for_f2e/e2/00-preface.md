@@ -19,7 +19,7 @@
 
 ##授权协议##
 
-本文档遵循 [署名-非商业性使用-相同方式共享] (http://creativecommons.net.cn/licenses/by-nc-sa.htm) 协议。
+本文档遵循 [署名-非商业性使用-相同方式共享 3.0] (http://creativecommons.net.cn/licenses/by-nc-sa.htm) 协议。
 
 ---
 
