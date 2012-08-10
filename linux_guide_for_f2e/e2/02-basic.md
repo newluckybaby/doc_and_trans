@@ -220,7 +220,7 @@ Linux下的文件可以分为以下几类：
 
 ``chmod``绝对模式的命令形式如下：
 
-    chmod path/to/file 777
+    chmod 777 path/to/file
 
 其中的777表示其拥有权限的绝对模式表示，其计算方式可参考下表：
 
